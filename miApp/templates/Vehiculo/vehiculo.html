@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Vehículos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Vehículos</h1>
+    <a href="{% url 'vehiculoAlta' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Nuevo Vehículo
+    </a>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="card shadow">
+    <div class="card-body">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Color</th>
+                    <th>Matrícula</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehiculo in vehiculos %}
+                <tr>
+                    <td>{{ vehiculo.marca }}</td>
+                    <td>{{ vehiculo.modelo }}</td>
+                    <td>{{ vehiculo.año }}</td>
+                    <td>{{ vehiculo.color }}</td>
+                    <td>{{ vehiculo.matricula }}</td>
+                    <td>{{ vehiculo.get_tipo_vehiculo_display }}</td>
+                    <td>
+                        <a href="{% url 'vehiculoEditar' vehiculo.id %}" class="btn btn-primary btn-sm">Editar</a>
+                        <form method="post" action="{% url 'vehiculoEliminar' vehiculo.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este vehículo?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No hay vehículos registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

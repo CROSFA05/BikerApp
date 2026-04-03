@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ titulo }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_email" class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" id="id_email"
+                                value="{{ form.email.value|default:'' }}" required>
+                            {% if form.email.errors %}
+                                <div class="text-danger small">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% if modo == 'crear' %}
+                        <div class="col-md-6 mb-3">
+                            <label for="id_password1" class="form-label">Contraseña</label>
+                            <input type="password" name="password1" class="form-control" id="id_password1" required>
+                            {% if form.password1.errors %}
+                                <div class="text-danger small">{{ form.password1.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_password2" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" name="password2" class="form-control" id="id_password2" required>
+                            {% if form.password2.errors %}
+                                <div class="text-danger small">{{ form.password2.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        <div class="col-md-6 mb-3">
+                            <label for="id_first_name" class="form-label">Nombre</label>
+                            <input type="text" name="first_name" class="form-control" id="id_first_name"
+                                value="{{ form.first_name.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_last_name" class="form-label">Apellido</label>
+                            <input type="text" name="last_name" class="form-control" id="id_last_name"
+                                value="{{ form.last_name.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_telefono" class="form-label">Teléfono</label>
+                            <input type="text" name="telefono" class="form-control" id="id_telefono"
+                                value="{{ form.telefono.value|default:'' }}" maxlength="10">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_grupo_biker" class="form-label">Grupo Biker</label>
+                            {{ form.grupo_biker }}
+                            {% if form.grupo_biker.errors %}
+                                <div class="text-danger small">{{ form.grupo_biker.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_sexo" class="form-label">Sexo</label>
+                            <select name="sexo" class="form-select" id="id_sexo">
+                                {% for choice in form.sexo.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if form.sexo.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_tipo_de_sangre" class="form-label">Tipo de Sangre</label>
+                            <select name="tipo_de_sangre" class="form-select" id="id_tipo_de_sangre">
+                                <option value="">No especificado</option>
+                                {% for choice in form.tipo_de_sangre.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if form.tipo_de_sangre.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" name="fecha_nacimiento" class="form-control" id="id_fecha_nacimiento"
+                                value="{{ form.fecha_nacimiento.value|default:'' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_nss" class="form-label">NSS</label>
+                            <input type="text" name="nss" class="form-control" id="id_nss"
+                                value="{{ form.nss.value|default:'' }}" maxlength="11">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_poliza_seguro" class="form-label">Póliza de Seguro</label>
+                            <input type="text" name="poliza_seguro" class="form-control" id="id_poliza_seguro"
+                                value="{{ form.poliza_seguro.value|default:'' }}" maxlength="50">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_aseguradora" class="form-label">Aseguradora</label>
+                            <input type="text" name="aseguradora" class="form-control" id="id_aseguradora"
+                                value="{{ form.aseguradora.value|default:'' }}" maxlength="50">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="id_enfermedades" class="form-label">Enfermedades</label>
+                            <textarea name="enfermedades" class="form-control" id="id_enfermedades" rows="2">{{ form.enfermedades.value|default:'' }}</textarea>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="id_alergias" class="form-label">Alergias</label>
+                            <textarea name="alergias" class="form-control" id="id_alergias" rows="2">{{ form.alergias.value|default:'' }}</textarea>
+                        </div>
+                        {% if modo == 'editar' %}
+                        <div class="col-md-6 mb-3 form-check">
+                            <input type="checkbox" name="is_active" class="form-check-input" id="id_is_active"
+                                {% if form.is_active.value %}checked{% endif %}>
+                            <label class="form-check-label" for="id_is_active">Usuario Activo</label>
+                        </div>
+                        <div class="col-md-6 mb-3 form-check">
+                            <input type="checkbox" name="is_staff" class="form-check-input" id="id_is_staff"
+                                {% if form.is_staff.value %}checked{% endif %}>
+                            <label class="form-check-label" for="id_is_staff">Es Administrador</label>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'usuarios' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">
+                            {% if modo == 'editar' %}Actualizar{% else %}Crear{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

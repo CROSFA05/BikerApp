@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ titulo }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_usuario" class="form-label">Usuario</label>
+                        {{ form.usuario }}
+                        {% if form.usuario.errors %}
+                            <div class="text-danger small">{{ form.usuario.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_estado" class="form-label">Estado</label>
+                        {{ form.estado }}
+                        {% if form.estado.errors %}
+                            <div class="text-danger small">{{ form.estado.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_lugar_de_inicio" class="form-label">Lugar de Inicio</label>
+                        <input type="text" name="lugar_de_inicio" class="form-control" id="id_lugar_de_inicio"
+                            value="{{ form.lugar_de_inicio.value|default:'' }}" required maxlength="200">
+                        {% if form.lugar_de_inicio.errors %}
+                            <div class="text-danger small">{{ form.lugar_de_inicio.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_lugar_de_fin" class="form-label">Lugar de Fin</label>
+                        <input type="text" name="lugar_de_fin" class="form-control" id="id_lugar_de_fin"
+                            value="{{ form.lugar_de_fin.value|default:'' }}" maxlength="200">
+                        {% if form.lugar_de_fin.errors %}
+                            <div class="text-danger small">{{ form.lugar_de_fin.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_distancia_estimada" class="form-label">Distancia Estimada (km)</label>
+                        <input type="number" name="distancia_estimada" class="form-control" id="id_distancia_estimada"
+                            value="{{ form.distancia_estimada.value|default:'' }}" step="0.01" min="0">
+                        {% if form.distancia_estimada.errors %}
+                            <div class="text-danger small">{{ form.distancia_estimada.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_duracion_estimada" class="form-label">Duración Estimada (horas)</label>
+                        <input type="number" name="duracion_estimada" class="form-control" id="id_duracion_estimada"
+                            value="{{ form.duracion_estimada.value|default:'' }}" step="0.01" min="0" placeholder="Ej: 2.5">
+                        {% if form.duracion_estimada.errors %}
+                            <div class="text-danger small">{{ form.duracion_estimada.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'viajes' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">
+                            {% if modo == 'editar' %}Actualizar{% else %}Crear{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ titulo }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_marca" class="form-label">Marca</label>
+                        <input type="text" name="marca" class="form-control" id="id_marca"
+                            value="{{ form.marca.value|default:'' }}" required maxlength="50">
+                        {% if form.marca.errors %}
+                        <div class="text-danger small">{{ form.marca.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_modelo" class="form-label">Modelo</label>
+                        <input type="text" name="modelo" class="form-control" id="id_modelo"
+                            value="{{ form.modelo.value|default:'' }}" required maxlength="50">
+                        {% if form.modelo.errors %}
+                        <div class="text-danger small">{{ form.modelo.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_año" class="form-label">Año</label>
+                        <input type="number" name="año" class="form-control" id="id_año"
+                            value="{{ form.año.value|default:'' }}" required min="1900" max="2100">
+                        {% if form.año.errors %}
+                        <div class="text-danger small">{{ form.año.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_color" class="form-label">Color</label>
+                        <input type="text" name="color" class="form-control" id="id_color"
+                            value="{{ form.color.value|default:'' }}" required maxlength="50">
+                        {% if form.color.errors %}
+                        <div class="text-danger small">{{ form.color.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_matricula" class="form-label">Matrícula</label>
+                        <input type="text" name="matricula" class="form-control" id="id_matricula"
+                            value="{{ form.matricula.value|default:'' }}" required maxlength="15">
+                        {% if form.matricula.errors %}
+                        <div class="text-danger small">{{ form.matricula.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_tipo_vehiculo" class="form-label">Tipo de Vehículo</label>
+                        <select name="tipo_vehiculo" class="form-select" id="id_tipo_vehiculo" required>
+                            <option value="">Seleccionar tipo</option>
+                            {% for choice in form.tipo_vehiculo.field.choices %}
+                                <option value="{{ choice.0 }}" {% if form.tipo_vehiculo.value == choice.0 %}selected{% endif %}>
+                                    {{ choice.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.tipo_vehiculo.errors %}
+                        <div class="text-danger small">{{ form.tipo_vehiculo.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="activo" class="form-check-input" id="id_activo"
+                            {% if form.activo.value %}checked{% endif %}>
+                        <label class="form-check-label" for="id_activo">Activo</label>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'vehiculos' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">
+                            {% if modo == 'editar' %}Actualizar{% else %}Crear{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

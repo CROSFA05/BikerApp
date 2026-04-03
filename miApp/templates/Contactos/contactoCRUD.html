@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ titulo }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_usuario" class="form-label">Usuario</label>
+                        {{ form.usuario }}
+                        {% if form.usuario.errors %}
+                        <div class="text-danger small">{{ form.usuario.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_nombre" class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" id="id_nombre"
+                            value="{{ form.nombre.value|default:'' }}" required maxlength="50">
+                        {% if form.nombre.errors %}
+                        <div class="text-danger small">{{ form.nombre.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_telefono" class="form-label">Teléfono</label>
+                        <input type="text" name="telefono" class="form-control" id="id_telefono"
+                            value="{{ form.telefono.value|default:'' }}" required maxlength="10" pattern="[0-9]{10}">
+                        {% if form.telefono.errors %}
+                        <div class="text-danger small">{{ form.telefono.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_relacion" class="form-label">Relación</label>
+                        <input type="text" name="relacion" class="form-control" id="id_relacion"
+                            value="{{ form.relacion.value|default:'' }}" required maxlength="50">
+                        {% if form.relacion.errors %}
+                        <div class="text-danger small">{{ form.relacion.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'contactos' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">
+                            {% if modo == 'editar' %}Actualizar{% else %}Crear{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
