@@ -35,7 +35,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password2')
         validated_data['password'] = make_password(validated_data['password'])
-        validated_data['username'] = validated_data['email']
         return Usuario.objects.create(**validated_data)
 
 

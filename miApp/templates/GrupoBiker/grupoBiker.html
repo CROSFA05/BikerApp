@@ -4,39 +4,37 @@
 
 {% block content %}
 <style>
-  .container-main {
+  .page {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
   }
 
-  .header {
+  .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    gap: 1rem;
     flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
   }
 
-  .header h1 {
-    font-size: 2rem;
-    font-weight: 600;
+  .page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
     color: #5c4b3b;
     margin: 0;
   }
 
-  .dark .header h1 {
-    color: #f3f4f6;
-  }
+  .dark .page-header h1 { color: #f3e7db; }
 
   .btn-new {
-    background: linear-gradient(135deg, #b48b6a 0%, #8b5e3c 100%);
-    color: white;
-    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #b48b6a, #8b5e3c);
+    color: #fff;
+    padding: 0.7rem 1.5rem;
     border-radius: 0.75rem;
     border: none;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
@@ -46,326 +44,238 @@
     transition: all 0.3s;
   }
 
-  .btn-new:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(139, 94, 60, 0.4);
-    color: white;
-  }
+  .btn-new:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(139, 94, 60, 0.4); color: #fff; }
 
-  .alerts-container {
-    margin-bottom: 2rem;
-  }
+  .alerts { margin-bottom: 2rem; }
 
   .alert {
-    padding: 1rem;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    animation: slideDown 0.3s ease-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .alert-success {
-    background: rgba(191, 173, 143, 0.16);
-    border-left: 4px solid #a17a4b;
-    color: #6a5133;
-  }
-
-  .dark .alert-success {
-    color: #6ee7b7;
-  }
-
-  .alert-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.3s;
-    padding: 0;
-  }
-
-  .alert-close:hover {
-    opacity: 1;
-  }
-
-  .table-container {
-    background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
-    padding: 2rem;
-    border-radius: 1.5rem;
-    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
-    overflow-x: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  thead {
-    background: linear-gradient(135deg, #8b5e3c 0%, #6d4a2f 100%);
-    color: white;
-  }
-
-  thead th {
-    padding: 1rem;
-    text-align: left;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid rgba(139, 94, 60, 0.1);
-    transition: background 0.3s;
-  }
-
-  tbody tr:hover {
-    background: rgba(139, 94, 60, 0.05);
-  }
-
-  tbody td {
-    padding: 1rem;
-    color: #374151;
-  }
-
-  .dark tbody td {
-    color: #e5e7eb;
-  }
-
-  .table-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #8b5e3c;
-    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .alert-success { background: rgba(191, 173, 143, 0.16); border-left: 4px solid #a17a4b; color: #6a5133; }
+
+  /* ─── Card Grid ─── */
+  .grupo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .grupo-card {
+    background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
+    border-radius: 1.5rem;
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+  }
+
+  .grupo-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 12px 12px 24px var(--neu-shadow-dark), -12px -12px 24px var(--neu-shadow-light);
+  }
+
+  .grupo-img-wrap {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #b48b6a, #8b5e3c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .grupo-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .grupo-img-wrap .placeholder {
+    color: rgba(255,255,255,0.6);
+  }
+
+  .grupo-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+
+  .grupo-body h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #5c4b3b;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .dark .grupo-body h3 { color: #f3e7db; }
+
+  .grupo-body .desc {
+    font-size: 0.88rem;
+    color: #6d5947;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+  }
+
+  .grupo-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   .badge {
-    display: inline-block;
-    padding: 0.5rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
     border-radius: 9999px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
-  .badge-active {
-    background: rgba(139, 94, 60, 0.2);
-    color: #6d4a2f;
+  .badge-on { background: rgba(139, 94, 60, 0.2); color: #6d4a2f; }
+  .badge-off { background: rgba(107, 114, 128, 0.2); color: #4b5563; }
+
+  .grupo-lider {
+    font-size: 0.8rem;
+    color: #8d7c6b;
   }
 
-  .dark .badge-active {
-    background: rgba(139, 94, 60, 0.3);
-    color: #f3e7db;
-  }
+  .grupo-lider strong { color: #6d5947; }
 
-  .badge-inactive {
-    background: rgba(107, 114, 128, 0.2);
-    color: #4b5563;
-  }
-
-  .dark .badge-inactive {
-    background: rgba(107, 114, 128, 0.3);
-    color: #9ca3af;
-  }
-
-  .actions {
+  .grupo-actions {
     display: flex;
     gap: 0.5rem;
-    flex-wrap: wrap;
   }
 
   .btn-sm {
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 1rem;
     border-radius: 0.5rem;
     border: none;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.3rem;
+    transition: all 0.25s;
   }
 
-  .btn-edit {
-    background: linear-gradient(135deg, #b48b6a 0%, #8b5e3c 100%);
-    color: white;
-    box-shadow: 0 2px 8px rgba(139, 94, 60, 0.2);
-  }
-
-  .btn-edit:hover {
-    transform: translateY(-1px);
-  }
-
-  .btn-delete {
-    background: linear-gradient(135deg, #c8755d 0%, #9c5d42 100%);
-    color: white;
-    box-shadow: 0 2px 8px rgba(200, 117, 93, 0.2);
-  }
-
-  .btn-delete:hover {
-    transform: translateY(-1px);
-  }
+  .btn-edit { background: linear-gradient(135deg, #b48b6a, #8b5e3c); color: #fff; }
+  .btn-edit:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(139, 94, 60, 0.3); }
+  .btn-del { background: linear-gradient(135deg, #c8755d, #9c5d42); color: #fff; }
+  .btn-del:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200, 117, 93, 0.3); }
 
   .empty-state {
+    grid-column: 1 / -1;
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 4rem 2rem;
   }
 
-  .empty-state-text {
-    color: #6b7280;
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-  }
+  .empty-state .big-icon { font-size: 4rem; color: #d1d5db; margin-bottom: 1rem; }
+  .empty-state p { color: #6b7280; font-size: 1.1rem; margin-bottom: 1.5rem; }
 
-  .dark .empty-state-text {
-    color: #9ca3af;
-  }
-
-  @media (max-width: 768px) {
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .btn-new {
-      width: 100%;
-      justify-content: center;
-    }
-
-    table {
-      font-size: 0.85rem;
-    }
-
-    tbody td {
-      padding: 0.75rem;
-    }
-
-    .actions {
-      flex-direction: column;
-    }
-
-    .btn-sm {
-      width: 100%;
-      text-align: center;
-    }
+  @media (max-width: 640px) {
+    .grupo-grid { grid-template-columns: 1fr; }
+    .page-header { flex-direction: column; align-items: stretch; }
+    .btn-new { justify-content: center; }
+    .grupo-img-wrap { height: 160px; }
   }
 </style>
 
-<div class="container-main">
-  <div class="header">
+<div class="page">
+  <div class="page-header">
     <h1>
-      <span class="iconify" data-icon="lucide:users" data-width="32" style="vertical-align: -8px; margin-right: 0.5rem;"></span>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-6px;margin-right:0.4rem;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       Grupos de Bikers
     </h1>
     {% if user.is_staff %}
     <a href="{% url 'grupoAlta' %}" class="btn-new">
-      <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       Nuevo Grupo
     </a>
     {% endif %}
   </div>
 
   {% if messages %}
-  <div class="alerts-container">
+  <div class="alerts">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}">
-      <span class="iconify" data-icon="lucide:check-circle" data-width="20"></span>
-      <div style="flex: 1;">{{ message }}</div>
-      <button type="button" class="alert-close" data-bs-dismiss="alert">
-        <span class="iconify" data-icon="lucide:x" data-width="20"></span>
-      </button>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>{{ message }}</span>
     </div>
     {% endfor %}
   </div>
   {% endif %}
 
-  <div class="table-container">
-    <div class="table-title">
-      <span class="iconify" data-icon="lucide:table" data-width="20"></span>
-      Listado de Grupos
-    </div>
-
+  <div class="grupo-grid">
     {% if grupos %}
-    <table>
-      <thead>
-        <tr>
-          <th>Imagen</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Estado</th>
-          {% if user.is_staff %}<th>Acciones</th>{% endif %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for grupo in grupos %}
-        <tr>
-          <td>
-            {% if grupo.imagen %}
-              <img src="{{ grupo.imagen.url }}" alt="{{ grupo.nombre }}" style="width: 3rem; height: 3rem; object-fit: cover; border-radius: 0.75rem; box-shadow: 2px 2px 6px var(--neu-shadow-dark), -2px -2px 6px var(--neu-shadow-light);">
-            {% else %}
-              <span class="iconify" data-icon="lucide:image" data-width="24" style="color: #9ca3af; display: block; margin: 0 auto;"></span>
-            {% endif %}
-          </td>
-          <td><strong>{{ grupo.nombre }}</strong></td>
-          <td>{{ grupo.descripcion|truncatewords:15 }}</td>
-          <td>
+      {% for grupo in grupos %}
+      <div class="grupo-card">
+        <div class="grupo-img-wrap">
+          {% if grupo.imagen %}
+            <img src="{{ grupo.imagen.url }}" alt="{{ grupo.nombre }}">
+          {% else %}
+            <div class="placeholder">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+          {% endif %}
+        </div>
+        <div class="grupo-body">
+          <h3>{{ grupo.nombre }}</h3>
+          <p class="desc">{{ grupo.descripcion|truncatewords:25 }}</p>
+          <div class="grupo-meta">
             {% if grupo.activo %}
-              <span class="badge badge-active">
-                <span class="iconify" data-icon="lucide:check-circle" data-width="14" style="vertical-align: -2px;"></span>
+              <span class="badge badge-on">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg>
                 Activo
               </span>
             {% else %}
-              <span class="badge badge-inactive">
-                <span class="iconify" data-icon="lucide:circle-x" data-width="14" style="vertical-align: -2px;"></span>
+              <span class="badge badge-off">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 Inactivo
               </span>
             {% endif %}
-          </td>
+            {% if grupo.lider %}
+              <span class="grupo-lider"><strong>Líder:</strong> {{ grupo.lider.first_name }} {{ grupo.lider.last_name }}</span>
+            {% endif %}
+          </div>
           {% if user.is_staff %}
-          <td>
-            <div class="actions">
-              <a href="{% url 'grupoEditar' grupo.id %}" class="btn-sm btn-edit">
-                <span class="iconify" data-icon="lucide:edit" data-width="16"></span>
-                Editar
-              </a>
-              <form method="post" action="{% url 'grupoEliminar' grupo.id %}" style="display: inline;" onsubmit="return confirm('¿Eliminar este grupo?');">
-                {% csrf_token %}
-                <button type="submit" class="btn-sm btn-delete">
-                  <span class="iconify" data-icon="lucide:trash-2" data-width="16"></span>
-                  Eliminar
-                </button>
-              </form>
-            </div>
-          </td>
+          <div class="grupo-actions">
+            <a href="{% url 'grupoEditar' grupo.id %}" class="btn-sm btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Editar
+            </a>
+            <form method="post" action="{% url 'grupoEliminar' grupo.id %}" style="display:inline;" onsubmit="return confirm('¿Eliminar este grupo?');">
+              {% csrf_token %}
+              <button type="submit" class="btn-sm btn-del">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Eliminar
+              </button>
+            </form>
+          </div>
           {% endif %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </div>
+      </div>
+      {% endfor %}
     {% else %}
     <div class="empty-state">
-      <div style="font-size: 3rem; color: #d1d5db; margin-bottom: 1rem;">
-        <span class="iconify" data-icon="lucide:inbox" data-width="60"></span>
+      <div class="big-icon">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
-      <div class="empty-state-text">No hay grupos registrados</div>
+      <p>No hay grupos registrados</p>
       {% if user.is_staff %}
       <a href="{% url 'grupoAlta' %}" class="btn-new">
-        <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         Crear Primer Grupo
       </a>
       {% endif %}
@@ -373,10 +283,4 @@
     {% endif %}
   </div>
 </div>
-
-<script>
-  if (window.Iconify) {
-    Iconify.build();
-  }
-</script>
 {% endblock %}

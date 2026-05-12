@@ -5,13 +5,36 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
-from .models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje
+from .models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje, UsuarioVehiculo
 from .forms import GrupoBikerForm, VehiculoForm, ContactoEmergenciaForm, UsuarioForm, UsuarioChangeForm, ViajeForm
 
 class Home(View):
     def get(self, request):
         if request.user.is_authenticated:
-            cdx = {'titulo': 'Inicio - Biker App'}
+            user = request.user
+            grupo = user.grupo_biker
+            if user.is_staff:
+                viajes_count = Viaje.objects.count()
+                contactos_count = ContactoEmergencia.objects.count()
+                vehiculos_count = UsuarioVehiculo.objects.count()
+            elif grupo:
+                viajes_count = Viaje.objects.filter(usuario__grupo_biker=grupo).count()
+                contactos_count = ContactoEmergencia.objects.filter(usuario__grupo_biker=grupo).count()
+                vehiculos_count = UsuarioVehiculo.objects.filter(usuario__grupo_biker=grupo).count()
+            else:
+                viajes_count = Viaje.objects.filter(usuario=user).count()
+                contactos_count = ContactoEmergencia.objects.filter(usuario=user).count()
+                vehiculos_count = UsuarioVehiculo.objects.filter(usuario=user).count()
+            cdx = {
+                'titulo': 'Inicio - Biker App',
+                'info_usuario': user,
+                'grupo': grupo,
+                'stats': {
+                    'viajes': viajes_count,
+                    'contactos': contactos_count,
+                    'vehiculos': vehiculos_count,
+                },
+            }
             return render(request, 'home.html', cdx)
         else:
             cdx = {'titulo': 'Bienvenido - Biker App'}
@@ -95,9 +118,9 @@ class ListaVehiculos(LoginRequiredMixin, View):
         cdx = {'vehiculos': vehiculos}
         return render(request, 'Vehiculo/vehiculo.html', cdx)
 
-class VehiculoAlta(View):
+class VehiculoAlta(LoginRequiredMixin, View):
     def get(self, request):
-        form = VehiculoForm()
+        form = VehiculoForm(initial={'usuarios': [request.user]})
         cdx = {'titulo': 'Alta de Vehiculo', 'form': form, 'modo': 'crear'}
         return render(request, 'Vehiculo/vehiculoCRUD.html', cdx)
     
@@ -110,7 +133,13 @@ class VehiculoAlta(View):
         cdx = {'titulo': 'Alta de Vehiculo', 'form': form, 'modo': 'crear'}
         return render(request, 'Vehiculo/vehiculoCRUD.html', cdx)
 
-class VehiculoEditar(View):
+class VehiculoEditar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        vehiculo = get_object_or_404(Vehiculo, pk=kwargs.get('vehiculo_id'))
+        if not (request.user.is_staff or vehiculo.usuarios.filter(id=request.user.id).exists()):
+            return HttpResponseForbidden('No tienes permiso para editar este vehículo')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, vehiculo_id):
         vehiculo = get_object_or_404(Vehiculo, pk=vehiculo_id)
         form = VehiculoForm(instance=vehiculo)
@@ -127,7 +156,12 @@ class VehiculoEditar(View):
         cdx = {'titulo': 'Editar Vehiculo', 'form': form, 'vehiculo': vehiculo, 'modo': 'editar'}
         return render(request, 'Vehiculo/vehiculoCRUD.html', cdx)
 
-class VehiculoEliminar(View):
+class VehiculoEliminar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden('Solo administradores pueden eliminar vehículos')
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, vehiculo_id):
         vehiculo = get_object_or_404(Vehiculo, pk=vehiculo_id)
         vehiculo.delete()
@@ -215,10 +249,7 @@ class UsuarioAlta(LoginRequiredMixin, View):
     def post(self, request):
         form = UsuarioForm(request.POST)
         if form.is_valid():
-            usuario = form.save(commit=False)
-            password = form.cleaned_data.get('password1')
-            usuario.password = make_password(password)
-            usuario.save()
+            form.save()
             messages.success(request, 'Usuario creado exitosamente')
             return redirect('usuarios')
         cdx = {'titulo': 'Alta de Usuario', 'form': form, 'modo': 'crear'}

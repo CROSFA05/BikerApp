@@ -1,6 +1,6 @@
-from django.forms import ModelForm, Select, DateInput
+from django.forms import ModelForm, Select, DateInput, ModelMultipleChoiceField, CheckboxSelectMultiple
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from miApp.models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje
+from miApp.models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje, UsuarioVehiculo
 
 class GrupoBikerForm(ModelForm):
     class Meta:
@@ -26,6 +26,13 @@ class ContactoEmergenciaForm(ModelForm):
         self.fields['usuario'].queryset = Usuario.objects.filter(is_active=True).exclude(id__in=usuarios_con_contacto)
 
 class UsuarioForm(UserCreationForm):
+    vehiculos = ModelMultipleChoiceField(
+        queryset=Vehiculo.objects.all(),
+        widget=CheckboxSelectMultiple,
+        required=False,
+        label='Vehículos asignados'
+    )
+
     class Meta:
         model = Usuario
         fields = ['email', 'first_name', 'last_name', 'rol', 'sexo', 'fecha_nacimiento', 
@@ -42,12 +49,25 @@ class UsuarioForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['grupo_biker'].queryset = GrupoBiker.objects.filter(activo=True)
         self.fields['grupo_biker'].required = False
-        # Add class to all fields
         for field_name, field in self.fields.items():
-            if field_name not in ['grupo_biker', 'fecha_nacimiento', 'sexo', 'tipo_de_sangre']:
+            if field_name not in ['grupo_biker', 'fecha_nacimiento', 'sexo', 'tipo_de_sangre', 'vehiculos']:
                 field.widget.attrs['class'] = 'form-input'
 
+    def save(self, commit=True):
+        user = super().save(commit=True)
+        UsuarioVehiculo.objects.filter(usuario=user).delete()
+        for v in self.cleaned_data.get('vehiculos', []):
+            UsuarioVehiculo.objects.create(usuario=user, vehiculo=v)
+        return user
+
 class UsuarioChangeForm(UserChangeForm):
+    vehiculos = ModelMultipleChoiceField(
+        queryset=Vehiculo.objects.all(),
+        widget=CheckboxSelectMultiple,
+        required=False,
+        label='Vehículos asignados'
+    )
+
     class Meta:
         model = Usuario
         fields = ['email', 'first_name', 'last_name', 'rol', 'sexo', 'fecha_nacimiento', 
@@ -62,6 +82,15 @@ class UsuarioChangeForm(UserChangeForm):
         super().__init__(*args, **kwargs)
         self.fields['grupo_biker'].queryset = GrupoBiker.objects.filter(activo=True)
         self.fields['grupo_biker'].required = False
+        if self.instance.pk:
+            self.fields['vehiculos'].initial = self.instance.vehiculos.all()
+
+    def save(self, commit=True):
+        user = super().save(commit=True)
+        UsuarioVehiculo.objects.filter(usuario=user).delete()
+        for v in self.cleaned_data.get('vehiculos', []):
+            UsuarioVehiculo.objects.create(usuario=user, vehiculo=v)
+        return user
 
 class ViajeForm(ModelForm):
     class Meta:

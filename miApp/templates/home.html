@@ -4,149 +4,419 @@
 
 {% block content %}
 <style>
-  .dashboard-container {
-    max-width: 1000px;
+  .dashboard {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 3rem 1rem;
+    padding: 1.5rem 1rem;
   }
 
-  .dashboard-header {
-    text-align: center;
-    margin-bottom: 3rem;
+  /* ─── Header ─── */
+  .dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
   }
 
-  .dashboard-header h1 {
-    font-size: 2.5rem;
+  .dash-header h1 {
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #111827;
-    margin-bottom: 0.5rem;
+    color: #5c4b3b;
+    margin: 0;
   }
 
-  .dashboard-grid {
+  .dark .dash-header h1 { color: #f3e7db; }
+
+  .btn-logout {
+    background: none;
+    border: 2px solid #c8755d;
+    color: #c8755d;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-logout:hover {
+    background: #c8755d;
+    color: #fff;
+  }
+
+  /* ─── Stats Grid ─── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+    box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 10px 10px 18px var(--neu-shadow-dark), -10px -10px 18px var(--neu-shadow-light);
+  }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #8b5e3c;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .dark .stat-number { color: #d4a87a; }
+
+  .stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8d7c6b;
+  }
+
+  .stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 0.75rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  /* ─── Profile Card ─── */
+  .profile-card {
+    background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
+    padding: 1.75rem;
+    border-radius: 1.5rem;
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.75rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #b48b6a, #8b5e3c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+  }
+
+  .avatar span {
+    font-size: 1.75rem;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .pinfo { flex: 1; min-width: 220px; }
+
+  .pinfo h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #5c4b3b;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .dark .pinfo h2 { color: #f3e7db; }
+
+  .pinfo .email {
+    color: #8d7c6b;
+    font-size: 0.9rem;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .pdetail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .pdetail {
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.5rem;
+    background: rgba(139, 94, 60, 0.06);
+  }
+
+  .pdetail .label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #a08878;
+  }
+
+  .pdetail .value {
+    font-size: 0.9rem;
+    color: #5c4b3b;
+    font-weight: 500;
+  }
+
+  .dark .pdetail .value { color: #e5d9cc; }
+
+  /* ─── Group Card ─── */
+  .group-card {
+    background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
+    padding: 1.75rem;
+    border-radius: 1.5rem;
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .group-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 1.25rem;
+    object-fit: cover;
+    box-shadow: 4px 4px 10px var(--neu-shadow-dark), -4px -4px 10px var(--neu-shadow-light);
+    flex-shrink: 0;
+  }
+
+  .group-img-placeholder {
+    width: 110px;
+    height: 110px;
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, #b48b6a, #8b5e3c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ginfo { flex: 1; min-width: 200px; }
+
+  .ginfo h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #5c4b3b;
+    margin: 0 0 0.15rem 0;
+  }
+
+  .dark .ginfo h3 { color: #f3e7db; }
+
+  .ginfo .lider {
+    font-size: 0.8rem;
+    color: #8d7c6b;
+    margin: 0 0 0.35rem 0;
+  }
+
+  .ginfo .desc {
+    font-size: 0.88rem;
+    color: #6d5947;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-on { background: rgba(139, 94, 60, 0.2); color: #6d4a2f; }
+
+  /* ─── Nav Grid ─── */
+  .nav-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 2rem;
+    gap: 1.25rem;
   }
 
-  .menu-card {
+  .nav-card {
     background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
-    padding: 2.5rem 2rem;
-    border-radius: 2rem;
-    width: 300px;
-    min-width: 280px;
+    padding: 1.75rem 1.25rem;
+    border-radius: 1.5rem;
+    width: 240px;
     box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
     text-decoration: none;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(124, 58, 237, 0.05);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  .menu-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 12px 12px 20px var(--neu-shadow-dark), -12px -12px 20px var(--neu-shadow-light);
+  .nav-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 12px 12px 24px var(--neu-shadow-dark), -12px -12px 24px var(--neu-shadow-light);
   }
 
-  .icon-wrapper {
-    width: 64px;
-    height: 64px;
-    border-radius: 1.25rem;
+  .nav-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
-    color: white;
+    margin-bottom: 0.75rem;
+    color: #fff;
   }
 
-  .bg-usuario { background: linear-gradient(135deg, #44403c, #1c1917); } /* Gris Piedra / Robusto */
-  .bg-contacto { background: linear-gradient(135deg, #ef4444, #991b1b); } /* Rojo / Emergencia */
-  .bg-grupos { background: linear-gradient(135deg, #f97316, #ea580c); } /* Naranja / Hermandad */
-  .bg-vehiculos { background: linear-gradient(135deg, #171717, #000000); } /* Negro / Metal */
-  .bg-viajes { background: linear-gradient(135deg, #78350f, #451a03); } /* Café / Cuero */
+  .i-user { background: linear-gradient(135deg, #44403c, #1c1917); }
+  .i-emerg { background: linear-gradient(135deg, #ef4444, #991b1b); }
+  .i-group { background: linear-gradient(135deg, #f97316, #ea580c); }
+  .i-bike { background: linear-gradient(135deg, #171717, #000); }
+  .i-trip { background: linear-gradient(135deg, #78350f, #451a03); }
 
-  .menu-card h2 {
-    font-size: 1.25rem;
+  .nav-card h4 {
+    font-size: 1rem;
     font-weight: 600;
-    color: #374151;
+    color: #5c4b3b;
     margin: 0;
   }
 
-  .menu-card p {
-    color: #6b7280;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
+  .dark .nav-card h4 { color: #f3e7db; }
+
+  .nav-card p {
+    color: #8d7c6b;
+    font-size: 0.8rem;
+    margin: 0.2rem 0 0;
   }
 
+  /* ─── Responsive ─── */
   @media (max-width: 640px) {
-    .menu-card {
-      width: 100%;
-    }
-    .dashboard-header h1 {
-      font-size: 2rem;
-    }
+    .profile-card, .group-card { flex-direction: column; align-items: center; text-align: center; }
+    .pdetail-grid { grid-template-columns: 1fr 1fr; }
+    .nav-card { width: 100%; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 
-<div class="dashboard-container">
-  <div class="dashboard-header">
-    <h1>Home</h1>
-    <p>Selecciona una categoría para gestionar la aplicación</p>
-    <div class="text-right">
-      <p class="text-sm text-gray-600">Bienvenido, {{ user.first_name }} {{ user.last_name }}</p>
-      <form method="post" action="{% url 'logout' %}" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" class="text-sm text-red-600 hover:text-red-800 border-none bg-transparent cursor-pointer">Cerrar Sesión</button>
-      </form>
+<div class="dashboard">
+  <div class="dash-header">
+    <div>
+      <h1>Panel de Control</h1>
+      <p style="color:#8d7c6b;margin:0;font-size:0.9rem;">
+        Bienvenido, {{ info_usuario.first_name }} {{ info_usuario.last_name }}
+      </p>
+    </div>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn-logout">Cerrar Sesión</button>
+    </form>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div style="margin-bottom:1rem;padding:0.75rem 1rem;border-radius:0.75rem;
+        {% if message.tags == 'error' %}background:#f8dfd3;color:#8a4d3b;
+        {% else %}background:#e7ecd8;color:#6a5a39;{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon i-trip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+      <div class="stat-number">{{ stats.viajes }}</div>
+      <div class="stat-label">Viajes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon i-emerg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+      <div class="stat-number">{{ stats.contactos }}</div>
+      <div class="stat-label">Contactos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon i-bike"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-4 2 3h3"/></svg></div>
+      <div class="stat-number">{{ stats.vehiculos }}</div>
+      <div class="stat-label">Vehículos</div>
     </div>
   </div>
 
-  <div class="dashboard-grid">
-    <!-- Usuarios -->
-    <a href="{% url 'usuarios' %}" class="menu-card">
-      <div class="icon-wrapper bg-usuario">
-        <span class="iconify" data-icon="lucide:users" data-width="32"></span>
+  <div class="profile-card">
+    <div class="avatar">
+      <span>{{ info_usuario.first_name|first|upper }}{{ info_usuario.last_name|first|upper }}</span>
+    </div>
+    <div class="pinfo">
+      <h2>{{ info_usuario.first_name }} {{ info_usuario.last_name }}</h2>
+      <p class="email">{{ info_usuario.email }}</p>
+      <div class="pdetail-grid">
+        <div class="pdetail"><span class="label">Teléfono</span><span class="value">{{ info_usuario.telefono|default:"—" }}</span></div>
+        <div class="pdetail"><span class="label">Rol</span><span class="value">{{ info_usuario.get_rol_display }}</span></div>
+        <div class="pdetail"><span class="label">Sexo</span><span class="value">{{ info_usuario.get_sexo_display }}</span></div>
+        <div class="pdetail"><span class="label">Tipo Sangre</span><span class="value">{{ info_usuario.get_tipo_de_sangre_display|default:"—" }}</span></div>
+        <div class="pdetail"><span class="label">NSS</span><span class="value">{{ info_usuario.nss|default:"—" }}</span></div>
+        <div class="pdetail"><span class="label">Aseguradora</span><span class="value">{{ info_usuario.aseguradora|default:"—" }}</span></div>
+        <div class="pdetail"><span class="label">Póliza</span><span class="value">{{ info_usuario.poliza_seguro|default:"—" }}</span></div>
+        <div class="pdetail"><span class="label">Enfermedades</span><span class="value">{{ info_usuario.enfermedades|default:"—" }}</span></div>
+        <div class="pdetail"><span class="label">Alergias</span><span class="value">{{ info_usuario.alergias|default:"—" }}</span></div>
       </div>
-      <h2>Usuarios</h2>
+    </div>
+  </div>
+
+  {% if grupo %}
+  <div class="group-card">
+    {% if grupo.imagen %}
+      <img src="{{ grupo.imagen.url }}" alt="{{ grupo.nombre }}" class="group-img">
+    {% else %}
+      <div class="group-img-placeholder">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+    {% endif %}
+    <div class="ginfo">
+      <h3>{{ grupo.nombre }}</h3>
+      {% if grupo.lider %}<p class="lider">Liderado por {{ grupo.lider.first_name }} {{ grupo.lider.last_name }}</p>{% endif %}
+      <p class="desc">{{ grupo.descripcion }}</p>
+      {% if grupo.activo %}<span class="badge badge-on">Activo</span>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="nav-grid">
+    <a href="{% url 'usuarios' %}" class="nav-card">
+      <div class="nav-icon i-user"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h4>Usuarios</h4>
       <p>Gestión de cuentas y perfiles</p>
     </a>
-
-    <!-- Contacto Emergencia -->
-    <a href="{% url 'contactos' %}" class="menu-card">
-      <div class="icon-wrapper bg-contacto">
-        <span class="iconify" data-icon="lucide:phone-call" data-width="32"></span>
-      </div>
-      <h2>Emergencias</h2>
+    <a href="{% url 'contactos' %}" class="nav-card">
+      <div class="nav-icon i-emerg"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+      <h4>Emergencias</h4>
       <p>Contactos y datos médicos</p>
     </a>
-
-    <!-- Grupos Bikers -->
-    <a href="{% url 'grupos' %}" class="menu-card">
-      <div class="icon-wrapper bg-grupos">
-        <span class="iconify" data-icon="lucide:shield-half" data-width="32"></span>
-      </div>
-      <h2>Grupos</h2>
+    <a href="{% url 'grupos' %}" class="nav-card">
+      <div class="nav-icon i-group"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h4>Grupos</h4>
       <p>Comunidades y hermandades</p>
     </a>
-
-    <!-- Vehículos -->
-    <a href="{% url 'vehiculos' %}" class="menu-card">
-      <div class="icon-wrapper bg-vehiculos">
-        <span class="iconify" data-icon="lucide:bike" data-width="32"></span>
-      </div>
-      <h2>Vehículos</h2>
-      <p>Motos registradas en el sistema</p>
+    <a href="{% url 'vehiculos' %}" class="nav-card">
+      <div class="nav-icon i-bike"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-4 2 3h3"/></svg></div>
+      <h4>Vehículos</h4>
+      <p>Motos registradas</p>
     </a>
-
-    <!-- Viajes -->
-    <a href="{% url 'viajes' %}" class="menu-card">
-      <div class="icon-wrapper bg-viajes">
-        <span class="iconify" data-icon="lucide:map-pin" data-width="32"></span>
-      </div>
-      <h2>Viajes</h2>
-      <p>Rutas y trayectos realizados</p>
+    <a href="{% url 'viajes' %}" class="nav-card">
+      <div class="nav-icon i-trip"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+      <h4>Viajes</h4>
+      <p>Rutas y trayectos</p>
     </a>
   </div>
 </div>

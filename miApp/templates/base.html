@@ -665,6 +665,20 @@
         <a href="{% url 'viajes' %}" class="navbar__link {% if '/viajes/' in request.path %}active{% endif %}" title="Viajes"><i data-feather="navigation"></i><span>Viajes</span></a>
       </li>
     </ul>
+
+    <div class="mt-auto w-full">
+      <div class="navbar__link w-full pointer-events-none opacity-80" title="{{ user.get_full_name }}">
+        <i data-feather="user"></i>
+        <span class="truncate">Hola, {{ user.first_name }}</span>
+      </div>
+      <form method="post" action="{% url 'logout' %}" class="w-full">
+      {% csrf_token %}
+      <button type="submit" class="navbar__link w-full text-red-600 hover:text-red-700 border-none bg-transparent cursor-pointer" title="Cerrar Sesión">
+        <i data-feather="log-out"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </form>
+    </div>
   </nav>
 
   <!-- Main Content Area -->
@@ -919,19 +933,6 @@
         ModalController.init();
         ContextMenuController.init();
         feather.replace();
-
-        document.addEventListener('click', function(e) {
-          var btn = e.target.closest('.alert-close');
-          if (btn) {
-            var alert = btn.closest('.alert');
-            if (alert) {
-              alert.style.transition = 'opacity 0.3s';
-              alert.style.opacity = '0';
-              setTimeout(function() { alert.remove(); }, 300);
-            }
-          }
-        });
-
         console.log('✅ BikerApp UI initialized');
       }
 

@@ -4,96 +4,296 @@
 
 {% block content %}
 <style>
-  .login-container {
-    max-width: 400px;
-    margin: 2rem auto;
-    padding: 2rem;
+  .login-wrapper {
+    min-height: calc(100vh - 8rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
     background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
+    padding: 2.5rem 2rem;
     border-radius: 2rem;
-    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+    box-shadow: 10px 10px 20px var(--neu-shadow-dark), -10px -10px 20px var(--neu-shadow-light);
   }
 
-  .form-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 0.5rem;
-    background: var(--neu-bg-secondary);
-    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
-    transition: all 0.3s ease;
+  .login-card h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #5c4b3b;
+    text-align: center;
+    margin: 0 0 0.15rem 0;
   }
 
-  .form-input:focus {
-    outline: none;
-    box-shadow: inset 6px 6px 12px var(--neu-shadow-dark), inset -6px -6px 12px var(--neu-shadow-light);
+  .login-card .sub {
+    text-align: center;
+    color: #8d7c6b;
+    font-size: 0.85rem;
+    margin: 0 0 1.75rem 0;
   }
 
-  .btn-primary {
-    width: 100%;
-    padding: 0.75rem;
-    background: linear-gradient(135deg, var(--neu-primary), var(--neu-primary-dark));
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
+  .dark .login-card h1 { color: #f3e7db; }
+
+  .field-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .field-group label {
+    display: block;
+    font-size: 0.8rem;
     font-weight: 600;
+    color: #6d5947;
+    margin-bottom: 0.35rem;
+  }
+
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--neu-bg-secondary);
+    border-radius: 0.75rem;
+    box-shadow: inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
+    transition: box-shadow 0.3s;
+  }
+
+  .input-wrap:focus-within {
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light),
+                0 0 0 3px rgba(139, 94, 60, 0.15);
+  }
+
+  .input-wrap .icon {
+    flex-shrink: 0;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a08878;
+  }
+
+  .input-wrap input {
+    flex: 1;
+    padding: 0.75rem 0.75rem 0.75rem 0;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: #5c4b3b;
+    outline: none;
+    min-width: 0;
+  }
+
+  .input-wrap input::placeholder { color: #b8a89a; }
+
+  .dark .input-wrap input { color: #e5d9cc; }
+
+  .toggle-pass {
+    flex-shrink: 0;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+    color: #a08878;
+    padding: 0;
+    transition: color 0.2s;
   }
 
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
+  .toggle-pass:hover { color: #8b5e3c; }
+
+  .field-error {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    color: #b3442e;
   }
 
-  .link {
-    color: var(--neu-primary);
+  .field-error svg { flex-shrink: 0; }
+
+  .alert-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .alert-box svg { flex-shrink: 0; margin-top: 1px; }
+
+  .alert-error {
+    background: #f8dfd3;
+    color: #8a4d3b;
+  }
+
+  .alert-success {
+    background: #e7ecd8;
+    color: #6a5a39;
+  }
+
+  .btn-login {
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, #b48b6a, #8b5e3c);
+    color: #fff;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 4px 4px 10px var(--neu-shadow-dark), -4px -4px 10px var(--neu-shadow-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-login:hover { transform: translateY(-2px); box-shadow: 6px 6px 14px var(--neu-shadow-dark), -6px -6px 14px var(--neu-shadow-light); }
+  .btn-login:active { transform: translateY(0); }
+
+  .btn-login:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  .btn-login.loading .spinner { display: inline-block; }
+  .btn-login.loading .btn-text { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .login-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    color: #8d7c6b;
+  }
+
+  .login-footer a {
+    color: #8b5e3c;
     text-decoration: none;
+    font-weight: 600;
   }
 
-  .link:hover {
-    text-decoration: underline;
-  }
+  .login-footer a:hover { text-decoration: underline; }
 </style>
 
-<div class="login-container">
-  <h1 class="text-2xl font-bold text-center mb-6">Iniciar Sesión</h1>
-  
-  {% if messages %}
-    {% for message in messages %}
-      <div class="mb-4 p-3 rounded {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
-        {{ message }}
+<div class="login-wrapper">
+  <div class="login-card">
+    <h1>Iniciar Sesión</h1>
+    <p class="sub">Accede a tu cuenta de BikerApp</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-box {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            {% if message.tags == 'error' %}
+              <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            {% else %}
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            {% endif %}
+          </svg>
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+      <div class="alert-box alert-error">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>{% for error in form.non_field_errors %}{{ error }}{% endfor %}</span>
       </div>
-    {% endfor %}
-  {% endif %}
-  
-  <form method="post">
-    {% csrf_token %}
-    <div class="mb-4">
-      <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium mb-2">Email:</label>
-      {{ form.username }}
-      {% if form.username.errors %}
-        <div class="text-red-500 text-sm mt-1">
-          {% for error in form.username.errors %}{{ error }}{% endfor %}
+    {% endif %}
+
+    <form method="post" id="loginForm">
+      {% csrf_token %}
+      <div class="field-group">
+        <label for="{{ form.username.id_for_label }}">Correo electrónico</label>
+        <div class="input-wrap">
+          <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+          {{ form.username }}
         </div>
-      {% endif %}
-    </div>
-    
-    <div class="mb-6">
-      <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium mb-2">Contraseña:</label>
-      {{ form.password }}
-      {% if form.password.errors %}
-        <div class="text-red-500 text-sm mt-1">
-          {% for error in form.password.errors %}{{ error }}{% endfor %}
+        {% if form.username.errors %}
+          <div class="field-error">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>{% for error in form.username.errors %}{{ error }}{% endfor %}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="field-group">
+        <label for="{{ form.password.id_for_label }}">Contraseña</label>
+        <div class="input-wrap">
+          <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          {{ form.password }}
+          <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar contraseña" tabindex="-1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
         </div>
-      {% endif %}
+        {% if form.password.errors %}
+          <div class="field-error">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>{% for error in form.password.errors %}{{ error }}{% endfor %}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-login" id="loginBtn">
+        <span class="btn-text">Entrar</span>
+        <span class="spinner"></span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      ¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate aquí</a>
     </div>
-    
-    <button type="submit" class="btn-primary">Iniciar Sesión</button>
-  </form>
-  
-  <div class="text-center mt-6">
-    <p>¿No tienes cuenta? <a href="{% url 'register' %}" class="link">Regístrate aquí</a></p>
   </div>
 </div>
+
+<script>
+  (function() {
+    var toggle = document.getElementById('togglePass');
+    var pass = document.getElementById('{{ form.password.id_for_label }}');
+    var eye = document.getElementById('eyeIcon');
+    if (toggle && pass) {
+      toggle.addEventListener('click', function() {
+        var type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+        pass.setAttribute('type', type);
+        if (type === 'text') {
+          eye.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+        } else {
+          eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        }
+      });
+    }
+
+    var form = document.getElementById('loginForm');
+    var btn = document.getElementById('loginBtn');
+    if (form && btn) {
+      form.addEventListener('submit', function() {
+        btn.classList.add('loading');
+        btn.disabled = true;
+      });
+    }
+  })();
+</script>
 {% endblock %}
