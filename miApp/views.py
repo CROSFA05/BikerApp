@@ -414,6 +414,9 @@ class ViajeEliminar(LoginRequiredMixin, View):
 
 class ChatGrupo(LoginRequiredMixin, View):
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            from django.contrib.auth.views import redirect_to_login
+            return redirect_to_login(request.get_full_path(), login_url='login')
         if not request.user.grupo_biker and not request.user.is_staff:
             return HttpResponseForbidden('Debes pertenecer a un grupo para usar el chat')
         return super().dispatch(request, *args, **kwargs)
