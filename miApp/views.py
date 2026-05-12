@@ -293,7 +293,8 @@ class UsuarioAlta(LoginRequiredMixin, View):
 
     def get(self, request):
         form = UsuarioForm()
-        cdx = {'titulo': 'Alta de Usuario', 'form': form, 'modo': 'crear'}
+        vehiculos_list = Vehiculo.objects.all().values('id', 'marca', 'modelo', 'matricula', 'año')
+        cdx = {'titulo': 'Alta de Usuario', 'form': form, 'modo': 'crear', 'vehiculos_list': vehiculos_list}
         return render(request, 'Usuario/usuarioCRUD.html', cdx)
     
     def post(self, request):
@@ -318,7 +319,8 @@ class UsuarioEditar(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
         usuario = get_object_or_404(Usuario, pk=usuario_id)
         form = UsuarioChangeForm(instance=usuario)
-        cdx = {'titulo': 'Editar Usuario', 'form': form, 'usuario': usuario, 'modo': 'editar'}
+        vehiculos_list = Vehiculo.objects.all().values('id', 'marca', 'modelo', 'matricula', 'año')
+        cdx = {'titulo': 'Editar Usuario', 'form': form, 'usuario': usuario, 'modo': 'editar', 'vehiculos_list': vehiculos_list}
         return render(request, 'Usuario/usuarioCRUD.html', cdx)
     
     def post(self, request, usuario_id):

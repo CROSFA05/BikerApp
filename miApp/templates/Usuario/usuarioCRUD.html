@@ -51,10 +51,10 @@
 
   .form-group label {
     display: block;
-    font-weight: 500;
-    color: #374151;
     margin-bottom: 0.5rem;
-    font-size: 0.95rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
   }
 
   .form-group input,
@@ -65,7 +65,6 @@
     border: none;
     border-radius: 0.75rem;
     font-size: 0.95rem;
-    transition: all 0.3s;
     background: linear-gradient(145deg, var(--neu-bg-secondary), var(--neu-bg-primary));
     box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
     color: #111827;
@@ -76,83 +75,95 @@
   .form-group select:focus,
   .form-group textarea:focus {
     outline: none;
-    ring: 2px solid #8b5e3c;
     box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light), 0 0 0 3px rgba(139, 94, 60, 0.1);
   }
 
-  .form-error {
-    color: #ef4444;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #9ca3af;
   }
 
   .form-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 
   .form-row-full {
     grid-column: 1 / -1;
   }
 
+  .form-error {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+
   .form-actions {
     display: flex;
-    gap: 1rem;
     justify-content: flex-end;
+    gap: 1rem;
     margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(139, 94, 60, 0.1);
-  }
-
-  .btn-secondary, .btn-success {
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 0.95rem;
-  }
-
-  .btn-secondary {
-    background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
-    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
-    color: #374151;
-    text-decoration: none;
-    display: inline-block;
-  }
-
-  .btn-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
   }
 
   .btn-success {
-    background: linear-gradient(135deg, #b48b6a 0%, #8b5e3c 100%);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #b48b6a, #8b5e3c);
     color: white;
-    box-shadow: 0 4px 12px rgba(139, 94, 60, 0.3);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
   }
 
   .btn-success:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: 0 6px 16px rgba(139, 94, 60, 0.4);
   }
 
-  .btn-success:active {
-    transform: translateY(1px);
+  .btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    background: var(--neu-bg-secondary);
+    color: #6d5039;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background: var(--neu-bg-primary);
+  }
+
+  .btn-success:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
   }
 
   .checkbox-group {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(145deg, var(--neu-bg-secondary), var(--neu-bg-primary));
+    box-shadow: inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
   }
 
   .checkbox-group input[type="checkbox"] {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
     accent-color: #8b5e3c;
   }
@@ -160,30 +171,23 @@
   .checkbox-group label {
     margin: 0;
     cursor: pointer;
-    font-weight: 400;
   }
 
+  /* Responsive */
   @media (max-width: 768px) {
-    .form-container {
-      padding: 1rem 0.5rem;
-    }
+    .form-container { padding: 1rem 0.5rem; }
+    .form-header h1 { font-size: 1.5rem; }
+    .form-section { padding: 1.5rem; border-radius: 1rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-actions { flex-direction: column; gap: 0.75rem; }
+    .btn-secondary, .btn-success { width: 100%; justify-content: center; text-align: center; }
+    .form-group { margin-bottom: 1.25rem; }
+  }
 
-    .form-section {
-      padding: 1.5rem;
-    }
-
-    .form-actions {
-      flex-direction: column;
-    }
-
-    .btn-secondary, .btn-success {
-      width: 100%;
-      text-align: center;
-    }
-
-    .form-header h1 {
-      font-size: 1.5rem;
-    }
+  @media (max-width: 480px) {
+    .form-container { padding: 0.75rem 0.25rem; }
+    .form-header h1 { font-size: 1.35rem; }
+    .form-section { padding: 1.25rem; border-radius: 1rem; }
   }
 </style>
 
@@ -216,21 +220,18 @@
         </div>
         {% endif %}
         <div class="form-group">
-          <label for="id_email">Email <span style="color: #ef4444;">*</span></label>
-          <input type="email" name="email" id="id_email" value="{{ form.email.value|default:'' }}" required>
+          {{ form.email }}
           {% if form.email.errors %}<div class="form-error">{{ form.email.errors }}</div>{% endif %}
         </div>
 
         {% if modo == 'crear' %}
         <div class="form-group">
-          <label for="id_password1">Contraseña <span style="color: #ef4444;">*</span></label>
-          <input type="password" name="password1" id="id_password1" required>
+          {{ form.password1 }}
           {% if form.password1.errors %}<div class="form-error">{{ form.password1.errors }}</div>{% endif %}
         </div>
 
         <div class="form-group">
-          <label for="id_password2">Confirmar Contraseña <span style="color: #ef4444;">*</span></label>
-          <input type="password" name="password2" id="id_password2" required>
+          {{ form.password2 }}
           {% if form.password2.errors %}<div class="form-error">{{ form.password2.errors }}</div>{% endif %}
         </div>
         {% endif %}
@@ -243,27 +244,19 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="id_first_name">Nombre <span style="color: #ef4444;">*</span></label>
-          <input type="text" name="first_name" id="id_first_name" value="{{ form.first_name.value|default:'' }}" required>
+          {{ form.first_name }}
         </div>
 
         <div class="form-group">
-          <label for="id_last_name">Apellido <span style="color: #ef4444;">*</span></label>
-          <input type="text" name="last_name" id="id_last_name" value="{{ form.last_name.value|default:'' }}" required>
+          {{ form.last_name }}
         </div>
 
         <div class="form-group">
-          <label for="id_rol">Rol</label>
-          <select name="rol" id="id_rol">
-            {% for choice in form.rol.field.choices %}
-              <option value="{{ choice.0 }}" {% if form.rol.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
-            {% endfor %}
-          </select>
+          {{ form.telefono }}
         </div>
 
         <div class="form-group">
-          <label for="id_telefono">Teléfono</label>
-          <input type="text" name="telefono" id="id_telefono" value="{{ form.telefono.value|default:'' }}" maxlength="10" placeholder="10 dígitos">
+          {{ form.rol }}
         </div>
 
         <div class="form-group">
@@ -272,28 +265,16 @@
         </div>
 
         <div class="form-group">
-          <label for="id_sexo">Sexo</label>
-          <select name="sexo" id="id_sexo">
-            {% for choice in form.sexo.field.choices %}
-              <option value="{{ choice.0 }}" {% if form.sexo.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
-            {% endfor %}
-          </select>
+          {{ form.sexo }}
         </div>
 
         <div class="form-group">
-          <label for="id_grupo_biker">Grupo Biker</label>
-          <select name="grupo_biker" id="id_grupo_biker">
-            <option value="">Selecciona un grupo...</option>
-            {% for choice in form.grupo_biker.field.queryset %}
-              <option value="{{ choice.id }}" {% if form.grupo_biker.value == choice.id %}selected{% endif %}>{{ choice.nombre }}</option>
-            {% endfor %}
-          </select>
+          {{ form.grupo_biker }}
           {% if form.grupo_biker.errors %}<div class="form-error">{{ form.grupo_biker.errors }}</div>{% endif %}
         </div>
-        <div class="form-group" style="grid-column:1/-1;">
-          <label for="id_imagen">Foto de Perfil</label>
-          <input type="file" name="imagen" id="id_imagen" accept="image/*" class="form-input" style="padding:0.5rem;">
-          {% if form.imagen.value %}<p style="font-size:0.8rem;color:#8d7c6b;margin-top:0.25rem;">Archivo actual: {{ form.imagen.value }}</p>{% endif %}
+
+        <div class="form-group form-row-full">
+          {{ form.imagen }}
         </div>
       </div>
 
@@ -304,23 +285,15 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="id_tipo_de_sangre">Tipo de Sangre</label>
-          <select name="tipo_de_sangre" id="id_tipo_de_sangre">
-            <option value="">No especificado</option>
-            {% for choice in form.tipo_de_sangre.field.choices %}
-              <option value="{{ choice.0 }}" {% if form.tipo_de_sangre.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
-            {% endfor %}
-          </select>
+          {{ form.tipo_de_sangre }}
         </div>
 
         <div class="form-group form-row-full">
-          <label for="id_enfermedades">Enfermedades</label>
-          <textarea name="enfermedades" id="id_enfermedades" rows="2" placeholder="Describe cualquier enfermedad relevante...">{{ form.enfermedades.value|default:'' }}</textarea>
+          {{ form.enfermedades }}
         </div>
 
         <div class="form-group form-row-full">
-          <label for="id_alergias">Alergias</label>
-          <textarea name="alergias" id="id_alergias" rows="2" placeholder="Describe cualquier alergia importante...">{{ form.alergias.value|default:'' }}</textarea>
+          {{ form.alergias }}
         </div>
       </div>
 
@@ -331,18 +304,15 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="id_nss">NSS</label>
-          <input type="text" name="nss" id="id_nss" value="{{ form.nss.value|default:'' }}" maxlength="11" placeholder="11 dígitos">
+          {{ form.nss }}
         </div>
 
         <div class="form-group">
-          <label for="id_poliza_seguro">Póliza de Seguro</label>
-          <input type="text" name="poliza_seguro" id="id_poliza_seguro" value="{{ form.poliza_seguro.value|default:'' }}" maxlength="50" placeholder="Número de póliza">
+          {{ form.poliza_seguro }}
         </div>
 
         <div class="form-group">
-          <label for="id_aseguradora">Aseguradora</label>
-          <input type="text" name="aseguradora" id="id_aseguradora" value="{{ form.aseguradora.value|default:'' }}" maxlength="50" placeholder="Nombre de la aseguradora">
+          {{ form.aseguradora }}
         </div>
       </div>
 
@@ -353,13 +323,17 @@
       </div>
       <div class="form-row">
         <div class="form-group form-row-full">
-          <div style="display:flex;flex-wrap:wrap;gap:0.75rem;padding:1rem;background:var(--neu-bg-secondary);border-radius:0.75rem;box-shadow:inset 3px 3px 6px var(--neu-shadow-dark),inset -3px -3px 6px var(--neu-shadow-light);">
-            {% for choice in form.vehiculos %}
-              <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;padding:0.4rem 0.75rem;border-radius:0.5rem;background:rgba(139,94,60,0.08);font-size:0.88rem;color:#5c4b3b;">
-                {{ choice.tag }} {{ choice.choice_label }}
-              </label>
+          <label for="id_vehiculos">Vehículos Asignados</label>
+          <select id="id_vehiculos" class="form-select">
+            <option value="">-- Selecciona vehículos --</option>
+            {% for v in vehiculos_list %}
+              <option value="{{ v.id }}">{{ v.marca }} {{ v.modelo }} ({{ v.matricula }})</option>
             {% endfor %}
-          </div>
+          </select>
+          <div id="vehiculo-tags" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;min-height:2rem;"></div>
+          {% for v in vehiculos_list %}
+            <input type="checkbox" id="chk-{{ v.id }}" name="vehiculos" value="{{ v.id }}" class="vehiculo-chk" style="display:none;">
+          {% endfor %}
           {% if form.vehiculos.errors %}<div class="form-error">{% for e in form.vehiculos.errors %}{{ e }}{% endfor %}</div>{% endif %}
         </div>
       </div>
@@ -372,12 +346,12 @@
       </div>
       <div class="form-row">
         <div class="form-group checkbox-group">
-          <input type="checkbox" name="is_active" id="id_is_active" {% if form.is_active.value %}checked{% endif %}>
+          {{ form.is_active }}
           <label for="id_is_active">Usuario Activo</label>
         </div>
 
         <div class="form-group checkbox-group">
-          <input type="checkbox" name="is_staff" id="id_is_staff" {% if form.is_staff.value %}checked{% endif %}>
+          {{ form.is_staff }}
           <label for="id_is_staff">Es Administrador</label>
         </div>
       </div>
@@ -401,9 +375,58 @@
 </div>
 
 <script>
-  // Inicializar iconify
-  if (window.Iconify) {
-    Iconify.build();
-  }
+  if (window.Iconify) { Iconify.build(); }
+
+  (function() {
+    var selectEl = document.getElementById('id_vehiculos');
+    var tags = document.getElementById('vehiculo-tags');
+    var chkPrefix = 'chk-';
+
+    function getCheckedIds() {
+      return Array.from(document.querySelectorAll('.vehiculo-chk:checked')).map(function(c) { return parseInt(c.value); });
+    }
+
+    function renderTags() {
+      tags.innerHTML = '';
+      var checkedIds = getCheckedIds();
+      var options = selectEl.querySelectorAll('option');
+      options.forEach(function(opt) {
+        if (opt.value && checkedIds.indexOf(parseInt(opt.value)) !== -1) {
+          var tag = document.createElement('span');
+          tag.innerHTML = opt.textContent + ' <button type="button" class="vehiculo-remove" data-id="' + opt.value + '" style="background:none;border:none;cursor:pointer;color:#8b5e3c;font-size:0.85rem;padding:0;line-height:1;margin-left:0.25rem;">&times;</button>';
+          tag.style.cssText = 'display:inline-flex;align-items:center;padding:0.35rem 0.75rem;border-radius:9999px;background:rgba(139,94,60,0.12);font-size:0.85rem;color:#5c4b3b;';
+          tags.appendChild(tag);
+        }
+      });
+      document.querySelectorAll('.vehiculo-remove').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var id = parseInt(this.getAttribute('data-id'));
+          var chk = document.getElementById(chkPrefix + id);
+          if (chk) chk.checked = false;
+          renderTags();
+        });
+      });
+    }
+
+    selectEl.addEventListener('change', function() {
+      var val = this.value;
+      if (val) {
+        var chk = document.getElementById(chkPrefix + val);
+        if (chk) chk.checked = true;
+        this.value = '';
+        renderTags();
+      }
+    });
+
+    // Check initial
+    {% if usuario and usuario.vehiculos.all %}
+      {% for v in usuario.vehiculos.all %}
+        var chk = document.getElementById('{{ chkPrefix }}{{ v.id }}');
+        if (chk) chk.checked = true;
+      {% endfor %}
+    {% endif %}
+
+    renderTags();
+  })();
 </script>
 {% endblock %}

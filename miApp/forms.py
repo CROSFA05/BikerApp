@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Select, DateInput, ModelMultipleChoiceField, CheckboxSelectMultiple, FileInput
+from django.forms import ModelForm, Select, DateInput, ModelMultipleChoiceField, CheckboxSelectMultiple, FileInput, TextInput, Textarea
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from miApp.models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje, UsuarioVehiculo
 
@@ -49,7 +49,17 @@ class UsuarioForm(UserCreationForm):
             'fecha_nacimiento': DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
             'sexo': Select(attrs={'class': 'form-select'}),
             'tipo_de_sangre': Select(attrs={'class': 'form-select'}),
+            'rol': Select(attrs={'class': 'form-select'}),
             'imagen': FileInput(attrs={'class': 'form-input'}),
+            'email': TextInput(attrs={'class': 'form-input', 'placeholder': 'correo@ejemplo.com'}),
+            'first_name': TextInput(attrs={'class': 'form-input', 'placeholder': 'Nombre(s)'}),
+            'last_name': TextInput(attrs={'class': 'form-input', 'placeholder': 'Apellido(s)'}),
+            'telefono': TextInput(attrs={'class': 'form-input', 'maxlength': '10', 'placeholder': '10 dígitos'}),
+            'enfermedades': Textarea(attrs={'class': 'form-input', 'rows': '2', 'placeholder': 'Describe cualquier enfermedad relevante...'}),
+            'alergias': Textarea(attrs={'class': 'form-input', 'rows': '2', 'placeholder': 'Describe cualquier alergia importante...'}),
+            'nss': TextInput(attrs={'class': 'form-input', 'maxlength': '11', 'placeholder': '11 dígitos'}),
+            'poliza_seguro': TextInput(attrs={'class': 'form-input', 'maxlength': '50', 'placeholder': 'Número de póliza'}),
+            'aseguradora': TextInput(attrs={'class': 'form-input', 'maxlength': '50', 'placeholder': 'Nombre de la aseguradora'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -60,9 +70,6 @@ class UsuarioForm(UserCreationForm):
         self.fields['sexo'].required = False
         self.fields['tipo_de_sangre'].required = False
         self.fields['fecha_nacimiento'].required = False
-        for field_name, field in self.fields.items():
-            if field_name not in ['grupo_biker', 'fecha_nacimiento', 'sexo', 'tipo_de_sangre', 'vehiculos', 'imagen']:
-                field.widget.attrs['class'] = 'form-input'
 
 class UsuarioChangeForm(UserChangeForm):
     vehiculos = ModelMultipleChoiceField(
@@ -80,7 +87,19 @@ class UsuarioChangeForm(UserChangeForm):
         widgets = {
             'grupo_biker': Select(attrs={'class': 'form-select'}),
             'fecha_nacimiento': DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'sexo': Select(attrs={'class': 'form-select'}),
+            'tipo_de_sangre': Select(attrs={'class': 'form-select'}),
+            'rol': Select(attrs={'class': 'form-select'}),
             'imagen': FileInput(attrs={'class': 'form-input'}),
+            'email': TextInput(attrs={'class': 'form-input', 'placeholder': 'correo@ejemplo.com'}),
+            'first_name': TextInput(attrs={'class': 'form-input', 'placeholder': 'Nombre(s)'}),
+            'last_name': TextInput(attrs={'class': 'form-input', 'placeholder': 'Apellido(s)'}),
+            'telefono': TextInput(attrs={'class': 'form-input', 'maxlength': '10', 'placeholder': '10 dígitos'}),
+            'enfermedades': Textarea(attrs={'class': 'form-input', 'rows': '2', 'placeholder': 'Describe cualquier enfermedad relevante...'}),
+            'alergias': Textarea(attrs={'class': 'form-input', 'rows': '2', 'placeholder': 'Describe cualquier alergia importante...'}),
+            'nss': TextInput(attrs={'class': 'form-input', 'maxlength': '11', 'placeholder': '11 dígitos'}),
+            'poliza_seguro': TextInput(attrs={'class': 'form-input', 'maxlength': '50', 'placeholder': 'Número de póliza'}),
+            'aseguradora': TextInput(attrs={'class': 'form-input', 'maxlength': '50', 'placeholder': 'Nombre de la aseguradora'}),
         }
 
     def __init__(self, *args, **kwargs):

@@ -263,39 +263,54 @@
     color: #7e6c4f !important;
   }
 
+  .break-word {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+
+  tbody td[data-label]::before {
+    display: none;
+  }
+
   @media (max-width: 768px) {
-    .users-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+    .users-container { padding: 1rem 0.75rem; }
+    .users-header { flex-direction: column; align-items: stretch; gap: 1rem; text-align: center; }
+    .btn-new { width: 100%; justify-content: center; }
+    .table-container { padding: 1rem; border-radius: 1rem; }
+    thead th { padding: 0.75rem 0.5rem; font-size: 0.7rem; }
+    tbody td { padding: 0.75rem 0.5rem; }
+    tbody tr { font-size: 0.88rem; }
+  }
 
-    .btn-new {
-      width: 100%;
-      justify-content: center;
-    }
+  @media (max-width: 640px) {
+    .users-container { padding: 0.75rem 0.5rem; }
+    .table-container { padding: 0.75rem; border-radius: 1rem; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr { padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.75rem; border: 1px solid rgba(139,94,60,0.15); }
+    tbody td { padding: 0.35rem 0; text-align: left; border: none; font-size: 0.88rem; }
+    tbody td:last-child { padding-top: 0.75rem; border-top: 1px solid rgba(139,94,60,0.1); margin-top: 0.5rem; }
+    tbody td::before { content: attr(data-label) ": "; float: left; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; color: #8d7c6b; min-width: 70px; }
+    tbody td[data-label="Email"]::before,
+    tbody td[data-label="Foto"]::before,
+    tbody td[data-label="Acciones"]::before { display: none; }
+    tbody td[data-label="Email"],
+    tbody td[data-label="Foto"] { text-align: left; padding: 0.5rem 0; }
+    tbody td[data-label="Acciones"] { text-align: left; padding: 0.75rem 0 0 0; border-top: 1px solid rgba(155,108,79,0.2); margin-top: 0.5rem; }
+    .actions { flex-direction: row; justify-content: center; gap: 0.5rem; }
+    .btn-sm { font-size: 0.82rem; padding: 0.5rem 0.75rem; width: auto; }
+  }
 
-    .table-container {
-      padding: 1rem;
-      border-radius: 1rem;
-    }
-
-    thead th {
-      padding: 0.75rem;
-      font-size: 0.75rem;
-    }
-
-    tbody td {
-      padding: 0.75rem;
-    }
-
-    .actions {
-      flex-direction: column;
-    }
-
-    .btn-sm {
-      width: 100%;
-      justify-content: center;
-    }
+  @media (max-width: 480px) {
+    .users-container { padding: 0.5rem 0.25rem; }
+    .users-header h1 { font-size: 1.5rem; }
+    tbody tr { padding: 0.75rem; }
+    tbody td::before { min-width: 60px; }
+    tbody td[data-label="Nombre"]::before,
+    tbody td[data-label="Grupo"]::before,
+    tbody td[data-label="Teléfono"]::before,
+    tbody td[data-label="Vehículos"]::before,
+    tbody td[data-label="Estado"]::before { min-width: 55px; }
   }
 </style>
 
@@ -353,21 +368,21 @@
       <tbody>
         {% for usuario in usuarios %}
         <tr>
-          <td>
+          <td data-label="Email">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
               <span class="iconify text-purple-500" data-icon="lucide:mail" data-width="16"></span>
-              {{ usuario.email }}
+              <span class="break-word">{{ usuario.email }}</span>
             </div>
           </td>
-          <td><a href="{% url 'usuarioDetalle' usuario.id %}" style="font-weight:600;color:#8b5e3c;text-decoration:none;">{{ usuario.first_name }} {{ usuario.last_name }}</a></td>
-          <td>
+          <td data-label="Nombre"><a href="{% url 'usuarioDetalle' usuario.id %}" style="font-weight:600;color:#8b5e3c;text-decoration:none;">{{ usuario.first_name }} {{ usuario.last_name }}</a></td>
+          <td data-label="Foto">
             {% if usuario.imagen %}
               <img src="{{ usuario.imagen.url }}" alt="Foto" style="width:36px;height:36px;border-radius:50%;object-fit:cover;box-shadow:2px 2px 6px rgba(0,0,0,0.1);">
             {% else %}
               <span style="display:inline-flex;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#b48b6a,#8b5e3c);color:#fff;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;">{{ usuario.first_name|first|upper }}{{ usuario.last_name|first|upper }}</span>
             {% endif %}
           </td>
-          <td>
+          <td data-label="Grupo">
             {% if usuario.grupo_biker %}
               <span style="display: flex; align-items: center; gap: 0.5rem;">
                 <span class="iconify text-blue-500" data-icon="lucide:users" data-width="16"></span>
@@ -377,7 +392,7 @@
               <span style="color: #9ca3af;">Sin grupo</span>
             {% endif %}
           </td>
-          <td>
+          <td data-label="Teléfono">
             {% if usuario.telefono %}
               <span style="display: flex; align-items: center; gap: 0.5rem;">
                 <span class="iconify text-green-500" data-icon="lucide:phone" data-width="16"></span>
@@ -387,18 +402,20 @@
               <span style="color: #9ca3af;">N/A</span>
             {% endif %}
           </td>
-          <td>
+          <td data-label="Vehículos">
             {% with vehiculos=usuario.vehiculos.all %}
               {% if vehiculos %}
-                {% for v in vehiculos %}
-                  <span style="display:inline-block;padding:0.15rem 0.5rem;margin:0.1rem;border-radius:9999px;background:rgba(139,94,60,0.12);font-size:0.78rem;color:#6d4a2f;white-space:nowrap;">{{ v.marca }} {{ v.modelo }}</span>
-                {% endfor %}
+                <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
+                  {% for v in vehiculos %}
+                    <span style="display:inline-block;padding:0.15rem 0.5rem;border-radius:9999px;background:rgba(139,94,60,0.12);font-size:0.78rem;color:#6d4a2f;white-space:nowrap;">{{ v.marca }} {{ v.modelo }}</span>
+                  {% endfor %}
+                </div>
               {% else %}
                 <span style="color:#9ca3af;font-size:0.85rem;">—</span>
               {% endif %}
             {% endwith %}
           </td>
-          <td>
+          <td data-label="Estado">
             {% if usuario.is_active %}
               <span class="badge badge-active">
                 <span class="iconify" data-icon="lucide:check-circle" data-width="14" style="vertical-align: -2px;"></span>
@@ -411,7 +428,7 @@
               </span>
             {% endif %}
           </td>
-          <td>
+          <td data-label="Acciones">
             <div class="actions">
               <a href="{% url 'usuarioEditar' usuario.id %}" class="btn-sm btn-edit" title="Editar usuario">
                 <span class="iconify" data-icon="lucide:edit" data-width="16"></span>

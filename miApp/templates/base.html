@@ -409,110 +409,217 @@
       max-width: calc(100% - 220px);
     }
 
-    /* Responsive navbar */
+    /* Desktop navbar - hidden on mobile, shown via hamburger */
     @media (max-width: 768px) {
-      .navbar {
-        position: static;
-        height: auto;
-        width: 100%;
-        flex-direction: row;
-        overflow-y: visible;
-        overflow-x: auto;
-        padding: 0.5rem;
-      }
-
-      .navbar-brand {
-        display: none;
-      }
-
-      .navbar__menu {
-        flex-direction: row;
-        gap: 0.5rem;
-        justify-content: center;
-        width: 100%;
-      }
-
-      .navbar__item {
-        width: auto;
-      }
-
-      .navbar__link {
-        width: auto;
-        height: 3rem;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1rem;
-        border-radius: 0.75rem;
-        background: var(--neu-bg-primary);
-      }
-
-      .navbar__link span {
-        position: static;
-        transform: none;
-        opacity: 1;
-        margin-left: 0.5rem;
-        background: none;
-        padding: 0;
-        box-shadow: none;
-      }
-
       main {
         margin-left: 0;
         max-width: 100%;
-        padding-top: 1rem;
+        padding: 1rem 0.75rem;
       }
 
       #toast-container {
         right: 0.5rem;
         max-width: calc(100vw - 1rem);
       }
-
-      #toast-container .toast-enter {
-        min-width: unset;
-        max-width: 100%;
-      }
-
-      #modal-dialog {
-        max-width: calc(100% - 2rem);
-        margin: 0 1rem;
-        padding: 1.5rem;
-      }
     }
 
     @media (max-width: 480px) {
-      .navbar__link {
-        height: 2.75rem;
-        padding: 0 0.6rem;
-        gap: 0.3rem;
+      main {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    /* Mobile Hamburger Menu */
+    .mobile-menu-toggle {
+      display: none;
+    }
+
+    .hamburger-btn {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 200;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 0.75rem;
+      background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
+      box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0;
+      transition: all 0.2s;
+    }
+
+    .hamburger-btn:active {
+      transform: scale(0.95);
+    }
+
+    .hamburger-line {
+      width: 22px;
+      height: 2.5px;
+      background: var(--neu-primary);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(1) {
+      transform: translateY(7.5px) rotate(45deg);
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(3) {
+      transform: translateY(-7.5px) rotate(-45deg);
+    }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 150;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .mobile-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100vh;
+      background: #f5eee4;
+      box-shadow: 4px 0 25px rgba(115, 82, 53, 0.2);
+      z-index: 160;
+      display: flex;
+      flex-direction: column;
+      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+    }
+
+    .mobile-sidebar.open {
+      left: 0;
+    }
+
+    .mobile-sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(107, 84, 61, 0.15);
+    }
+
+    .mobile-sidebar-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--neu-primary);
+    }
+
+    .mobile-sidebar-close {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #8d7c6b;
+      padding: 0.25rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-sidebar-close:hover {
+      background: rgba(139, 94, 60, 0.08);
+    }
+
+    .mobile-sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      background: rgba(139, 94, 60, 0.06);
+      color: #5c4b3b;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .mobile-nav {
+      flex: 1;
+      padding: 0.75rem 0;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1.5rem;
+      color: #6d5039;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+
+    .mobile-nav-item:hover {
+      background: rgba(139, 94, 60, 0.08);
+      color: var(--neu-primary);
+    }
+
+    .mobile-nav-item.active {
+      background: rgba(139, 94, 60, 0.12);
+      color: var(--neu-primary);
+      border-left-color: var(--neu-primary);
+    }
+
+    .mobile-sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid rgba(107, 84, 61, 0.15);
+    }
+
+    .mobile-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: rgba(239, 68, 68, 0.08);
+      color: #b55d3f;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mobile-logout-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        display: none;
       }
 
-      .navbar__link i {
-        font-size: 1.2rem;
-        width: 1.2rem;
-        height: 1.2rem;
-      }
-
-      .navbar__link span {
-        font-size: 0.75rem;
-        margin-left: 0.3rem;
-      }
-
-      .navbar__menu {
-        gap: 0.3rem;
+      .mobile-menu-toggle {
+        display: block;
       }
 
       main {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-      }
-
-      #modal-dialog {
-        padding: 1.25rem;
-      }
-
-      .navbar__item:last-child::before {
-        display: none;
+        padding-top: 4.5rem;
       }
     }
 
@@ -667,7 +774,72 @@
   <!-- Toast Container -->
   <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-3 pointer-events-none" role="status" aria-live="polite" aria-atomic="false"></div>
 
-  <!-- Navigation Sidebar -->
+  <!-- Mobile Hamburger Menu -->
+  <div class="mobile-menu-toggle" id="mobile-menu-toggle">
+    <button type="button" class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú" aria-expanded="false">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+
+  <!-- Mobile Sidebar -->
+  <div class="mobile-sidebar" id="mobile-sidebar">
+    <div class="mobile-sidebar-header">
+      <span class="mobile-sidebar-title">Menú</span>
+      <button type="button" class="mobile-sidebar-close" id="mobile-close" aria-label="Cerrar menú">
+        <span class="iconify" data-icon="lucide:x" data-width="22"></span>
+      </button>
+    </div>
+    <div class="mobile-sidebar-user">
+      <span class="iconify" data-icon="lucide:user" data-width="20"></span>
+      <span>Hola, {{ user.first_name }}</span>
+    </div>
+    <nav class="mobile-nav">
+      <a href="{% url 'home' %}" class="mobile-nav-item {% if request.path == '/' %}active{% endif %}">
+        <span class="iconify" data-icon="lucide:user" data-width="20"></span>
+        <span>Usuario</span>
+      </a>
+      <a href="{% url 'usuarios' %}" class="mobile-nav-item {% if '/usuarios/' in request.path %}active{% endif %}">
+        <span class="iconify" data-icon="lucide:users" data-width="20"></span>
+        <span>Usuarios</span>
+      </a>
+      <a href="{% url 'contactos' %}" class="mobile-nav-item {% if '/contactos/' in request.path %}active{% endif %}">
+        <span class="iconify" data-icon="lucide:message-square" data-width="20"></span>
+        <span>Contactos</span>
+      </a>
+      <a href="{% url 'grupos' %}" class="mobile-nav-item {% if '/grupos/' in request.path %}active{% endif %}">
+        <span class="iconify" data-icon="lucide:grid" data-width="20"></span>
+        <span>Grupos</span>
+      </a>
+      <a href="{% url 'vehiculos' %}" class="mobile-nav-item {% if '/vehiculos/' in request.path %}active{% endif %}">
+        <span class="iconify" data-icon="lucide:truck" data-width="20"></span>
+        <span>Vehículos</span>
+      </a>
+      <a href="{% url 'viajes' %}" class="mobile-nav-item {% if '/viajes/' in request.path %}active{% endif %}">
+        <span class="iconify" data-icon="lucide:navigation" data-width="20"></span>
+        <span>Viajes</span>
+      </a>
+      <a href="{% url 'chat_grupo' %}" class="mobile-nav-item {% if '/chat/' in request.path %}active{% endif %}">
+        <span class="iconify" data-icon="lucide:message-circle" data-width="20"></span>
+        <span>Chat</span>
+      </a>
+    </nav>
+    <div class="mobile-sidebar-footer">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="mobile-logout-btn">
+          <span class="iconify" data-icon="lucide:log-out" data-width="20"></span>
+          <span>Cerrar Sesión</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Navigation Sidebar (desktop only) -->
   <nav class="navbar">
     <a href="{% url 'home' %}" class="navbar__link {% if request.path == '/' %}active{% endif %}" title="Usuario">
       <i data-feather="user"></i>
@@ -961,6 +1133,48 @@
         ModalController.init();
         ContextMenuController.init();
         feather.replace();
+
+        // Mobile hamburger menu
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const mobileClose = document.getElementById('mobile-close');
+
+        if (hamburgerBtn && mobileSidebar && mobileOverlay && mobileClose) {
+          function openSidebar() {
+            hamburgerBtn.classList.add('active');
+            hamburgerBtn.setAttribute('aria-expanded', 'true');
+            mobileSidebar.classList.add('open');
+            mobileOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+
+          function closeSidebar() {
+            hamburgerBtn.classList.remove('active');
+            hamburgerBtn.setAttribute('aria-expanded', 'false');
+            mobileSidebar.classList.remove('open');
+            mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+
+          hamburgerBtn.addEventListener('click', function() {
+            if (mobileSidebar.classList.contains('open')) {
+              closeSidebar();
+            } else {
+              openSidebar();
+            }
+          });
+
+          mobileClose.addEventListener('click', closeSidebar);
+          mobileOverlay.addEventListener('click', closeSidebar);
+
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileSidebar.classList.contains('open')) {
+              closeSidebar();
+            }
+          });
+        }
+
         console.log('✅ BikerApp UI initialized');
       }
 

@@ -50,9 +50,29 @@
   .vehiculos-wrap h3 { font-size: 1rem; font-weight: 700; color: #5c4b3b; margin: 0 0 0.75rem 0; display: flex; align-items: center; gap: 0.5rem; }
   .dark .vehiculos-wrap h3 { color: #f3e7db; }
 
-  @media (max-width: 640px) { .profile-card, .group-card { flex-direction: column; align-items: center; text-align: center; } .pdetail-grid { grid-template-columns: 1fr 1fr; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 768px) {
+    .page { padding: 1rem 0.75rem; }
+    .dash-header { text-align: center; }
+    .dash-header h1 { font-size: 1.5rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .stat-card { padding: 1rem; }
+    .stat-number { font-size: 1.75rem; }
+    .profile-card, .group-card { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; }
+    .pdetail-grid { grid-template-columns: 1fr 1fr; }
+  }
 
-  @media (max-width: 480px) { .page { padding: 1rem 0.5rem; } .dash-header h1 { font-size: 1.35rem; } .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; } .stat-card { padding: 1rem; } .stat-number { font-size: 1.5rem; } .profile-card, .group-card { padding: 1.25rem; } .pdetail-grid { grid-template-columns: 1fr; } .vehiculos-wrap { padding: 1rem; } }
+  @media (max-width: 480px) {
+    .page { padding: 0.75rem 0.5rem; }
+    .dash-header h1 { font-size: 1.4rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .stat-card { padding: 0.75rem; }
+    .stat-number { font-size: 1.5rem; }
+    .stat-label { font-size: 0.75rem; }
+    .profile-card, .group-card { padding: 1rem; }
+    .pdetail-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+    .pdetail-item { font-size: 0.85rem; }
+    .vehiculos-wrap { padding: 1rem; }
+  }
 </style>
 
 <div class="page">

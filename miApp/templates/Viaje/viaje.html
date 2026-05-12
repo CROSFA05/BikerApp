@@ -151,30 +151,37 @@
   }
 
   @media (max-width: 768px) {
-    .viajes-container { padding: 1rem; gap: 1.5rem; }
-    .header { flex-direction: column; text-align: center; }
+    .viajes-container { padding: 1rem 0.75rem; gap: 1.5rem; }
+    .header { flex-direction: column; text-align: center; gap: 1rem; }
     .header h1 { font-size: 1.5rem; }
     .btn-new { width: 100%; justify-content: center; }
-    .table-container { padding: 1rem; }
-    thead th { padding: 0.75rem; font-size: 0.7rem; }
-    tbody td { padding: 1rem 0.75rem; }
-    .actions { flex-direction: column; }
+    .table-container { padding: 1rem; border-radius: 1rem; }
+    thead th { padding: 0.75rem 0.5rem; font-size: 0.7rem; }
+    tbody td { padding: 0.75rem 0.5rem; }
+    tbody tr { font-size: 0.9rem; }
+    .actions { flex-direction: column; gap: 0.4rem; }
     .btn-sm { width: 100%; justify-content: center; }
   }
 
   @media (max-width: 640px) {
-    .viajes-container { padding: 0.75rem; }
+    .viajes-container { padding: 0.75rem 0.5rem; }
+    .table-container { padding: 0.75rem; border-radius: 1rem; }
     table, thead, tbody, th, td, tr { display: block; }
     thead { display: none; }
-    tbody tr { padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0.75rem; border: 1px solid rgba(139,94,60,0.1); }
-    tbody td { padding: 0.4rem 0; text-align: right; border: none; }
-    tbody td::before { content: attr(data-label); float: left; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: #8d7c6b; }
+    tbody tr { padding: 1rem; margin-bottom: 0.75rem; border-radius: 0.75rem; border: 1px solid rgba(139,94,60,0.15); }
+    tbody td { padding: 0.35rem 0; text-align: left; border: none; font-size: 0.88rem; }
+    tbody td:last-child { padding-top: 0.75rem; border-top: 1px solid rgba(139,94,60,0.1); margin-top: 0.5rem; }
+    tbody td::before { content: attr(data-label) ": "; float: left; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; color: #8d7c6b; min-width: 70px; }
+    .actions { flex-direction: row; justify-content: center; gap: 0.5rem; }
+    .btn-sm { width: auto; font-size: 0.82rem; padding: 0.5rem 0.75rem; }
   }
 
   @media (max-width: 480px) {
-    .viajes-container { padding: 0.5rem; }
-    .header h1 { font-size: 1.25rem; }
-    .empty-state { padding: 3rem 0.5rem; }
+    .viajes-container { padding: 0.5rem 0.25rem; }
+    .header h1 { font-size: 1.3rem; }
+    .empty-state { padding: 2rem 0.5rem; }
+    tbody tr { padding: 0.75rem; }
+    tbody td::before { min-width: 60px; }
   }
 </style>
 
