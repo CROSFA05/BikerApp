@@ -9,7 +9,7 @@ from .serializers import (
     GrupoBikerSerializer, VehiculoSerializer, ContactoEmergenciaSerializer,
     ViajeSerializer, UsuarioVehiculoSerializer
 )
-from .permissions import IsStaffOrReadOnly, IsOwnerOrStaff, SameGroupOrStaff
+from .permissions import IsStaffOrReadOnly, IsOwnerOrStaff, SameGroupOrStaff, IsLeaderOrStaff, SameGroupViewOwnerEdit
 
 
 class LoginView(generics.GenericAPIView):
@@ -93,7 +93,12 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 class GrupoBikerViewSet(viewsets.ModelViewSet):
     queryset = GrupoBiker.objects.all()
     serializer_class = GrupoBikerSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsLeaderOrStaff]
+
+    def get_permissions(self):
+        if self.action in ['create', 'destroy']:
+            return [permissions.IsAdminUser()]
+        return [IsLeaderOrStaff()]
 
 
 class VehiculoViewSet(viewsets.ModelViewSet):
@@ -105,13 +110,27 @@ class VehiculoViewSet(viewsets.ModelViewSet):
 class ContactoEmergenciaViewSet(viewsets.ModelViewSet):
     queryset = ContactoEmergencia.objects.all()
     serializer_class = ContactoEmergenciaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsOwnerOrStaff]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return ContactoEmergencia.objects.all()
+        return ContactoEmergencia.objects.filter(usuario=user)
 
 
 class ViajeViewSet(viewsets.ModelViewSet):
     queryset = Viaje.objects.all()
     serializer_class = ViajeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [SameGroupViewOwnerEdit]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return Viaje.objects.all()
+        if user.grupo_biker:
+            return Viaje.objects.filter(usuario__grupo_biker=user.grupo_biker)
+        return Viaje.objects.filter(usuario=user)
 
 
 class UsuarioVehiculoViewSet(viewsets.ModelViewSet):

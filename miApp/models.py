@@ -5,6 +5,8 @@ class GrupoBiker(models.Model):
     nombre = models.CharField(max_length = 50, unique = True)
     descripcion = models.TextField(max_length = 300)
     activo = models.BooleanField(default = True)
+    lider = models.ForeignKey('Usuario', on_delete=models.SET_NULL, null=True, blank=True, related_name='grupos_liderados')
+    imagen = models.ImageField(upload_to='grupos/', null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -46,6 +48,11 @@ class Usuario(AbstractUser):
         O_POSITIVO = 6
         O_NEGATIVO = 7
 
+    class Rol(models.IntegerChoices):
+        MIEMBRO = 0, 'Miembro'
+        LIDER = 1, 'Líder'
+
+    rol = models.IntegerField(choices = Rol.choices, default=Rol.MIEMBRO)
     sexo = models.IntegerField(choices = Sexo.choices, default=Sexo.PREFIERO_NO_DECIR)
     fecha_nacimiento = models.DateField(null=True, blank=True)
     tipo_de_sangre = models.IntegerField(choices = Tipo_De_Sangre.choices, null=True, blank=True)

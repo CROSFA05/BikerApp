@@ -5,7 +5,7 @@ from miApp.models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaj
 class GrupoBikerForm(ModelForm):
     class Meta:
         model = GrupoBiker
-        fields = ['nombre', 'descripcion', 'activo']
+        fields = ['nombre', 'descripcion', 'activo', 'lider', 'imagen']
 
 class VehiculoForm(ModelForm):
     class Meta:
@@ -28,7 +28,7 @@ class ContactoEmergenciaForm(ModelForm):
 class UsuarioForm(UserCreationForm):
     class Meta:
         model = Usuario
-        fields = ['email', 'first_name', 'last_name', 'sexo', 'fecha_nacimiento', 
+        fields = ['email', 'first_name', 'last_name', 'rol', 'sexo', 'fecha_nacimiento', 
                   'tipo_de_sangre', 'enfermedades', 'alergias', 'nss', 'poliza_seguro',
                   'aseguradora', 'telefono', 'grupo_biker', 'activo']
         widgets = {
@@ -50,7 +50,7 @@ class UsuarioForm(UserCreationForm):
 class UsuarioChangeForm(UserChangeForm):
     class Meta:
         model = Usuario
-        fields = ['email', 'first_name', 'last_name', 'sexo', 'fecha_nacimiento', 
+        fields = ['email', 'first_name', 'last_name', 'rol', 'sexo', 'fecha_nacimiento', 
                   'tipo_de_sangre', 'enfermedades', 'alergias', 'nss', 'poliza_seguro',
                   'aseguradora', 'telefono', 'grupo_biker', 'activo', 'is_active', 'is_staff']
         widgets = {

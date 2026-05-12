@@ -46,7 +46,7 @@ class GrupoAlta(LoginRequiredMixin, View):
         return render(request, 'GrupoBiker/grupoCRUD.html', cdx)
         
     def post(self, request):
-        form = GrupoBikerForm(request.POST)
+        form = GrupoBikerForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Grupo creado exitosamente')
@@ -55,6 +55,12 @@ class GrupoAlta(LoginRequiredMixin, View):
         return render(request, 'GrupoBiker/grupoCRUD.html', cdx)
 
 class GrupoEditar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        grupo = get_object_or_404(GrupoBiker, pk=kwargs.get('grupo_id'))
+        if not (request.user.is_staff or grupo.lider == request.user):
+            return HttpResponseForbidden('No tienes permiso para editar este grupo')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, grupo_id):
         grupo = get_object_or_404(GrupoBiker, pk=grupo_id)
         form = GrupoBikerForm(instance=grupo)
@@ -63,7 +69,7 @@ class GrupoEditar(LoginRequiredMixin, View):
     
     def post(self, request, grupo_id):
         grupo = get_object_or_404(GrupoBiker, pk=grupo_id)
-        form = GrupoBikerForm(request.POST, instance=grupo)
+        form = GrupoBikerForm(request.POST, request.FILES, instance=grupo)
         if form.is_valid():
             form.save()
             messages.success(request, 'Grupo actualizado exitosamente')
@@ -72,6 +78,11 @@ class GrupoEditar(LoginRequiredMixin, View):
         return render(request, 'GrupoBiker/grupoCRUD.html', cdx)
 
 class GrupoEliminar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden('Solo administradores pueden eliminar grupos')
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, grupo_id):
         grupo = get_object_or_404(GrupoBiker, pk=grupo_id)
         grupo.delete()
@@ -125,7 +136,10 @@ class VehiculoEliminar(View):
 
 class ListaContactos(LoginRequiredMixin, View):
     def get(self, request):
-        contactos = ContactoEmergencia.objects.select_related('usuario').all()
+        if request.user.is_staff:
+            contactos = ContactoEmergencia.objects.select_related('usuario').all()
+        else:
+            contactos = ContactoEmergencia.objects.select_related('usuario').filter(usuario=request.user)
         cdx = {'contactos': contactos}
         return render(request, 'Contactos/contactoEmergencia.html', cdx)
 
@@ -145,6 +159,12 @@ class ContactoAlta(LoginRequiredMixin, View):
         return render(request, 'Contactos/contactoCRUD.html', cdx)
 
 class ContactoEditar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        contacto = get_object_or_404(ContactoEmergencia, pk=kwargs.get('contacto_id'))
+        if not (request.user.is_staff or contacto.usuario == request.user):
+            return HttpResponseForbidden('No tienes permiso para editar este contacto')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, contacto_id):
         contacto = get_object_or_404(ContactoEmergencia, pk=contacto_id)
         form = ContactoEmergenciaForm(instance=contacto)
@@ -162,6 +182,12 @@ class ContactoEditar(LoginRequiredMixin, View):
         return render(request, 'Contactos/contactoCRUD.html', cdx)
 
 class ContactoEliminar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        contacto = get_object_or_404(ContactoEmergencia, pk=kwargs.get('contacto_id'))
+        if not (request.user.is_staff or contacto.usuario == request.user):
+            return HttpResponseForbidden('No tienes permiso para eliminar este contacto')
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, contacto_id):
         contacto = get_object_or_404(ContactoEmergencia, pk=contacto_id)
         contacto.delete()
@@ -235,7 +261,12 @@ class UsuarioEliminar(LoginRequiredMixin, View):
 
 class ListaViajes(LoginRequiredMixin, View):
     def get(self, request):
-        viajes = Viaje.objects.select_related('usuario').all()
+        if request.user.is_staff:
+            viajes = Viaje.objects.select_related('usuario').all()
+        elif request.user.grupo_biker:
+            viajes = Viaje.objects.select_related('usuario').filter(usuario__grupo_biker=request.user.grupo_biker)
+        else:
+            viajes = Viaje.objects.filter(usuario=request.user)
         cdx = {'viajes': viajes}
         return render(request, 'Viaje/viaje.html', cdx)
 
@@ -255,6 +286,12 @@ class ViajeAlta(LoginRequiredMixin, View):
         return render(request, 'Viaje/viajeCRUD.html', cdx)
 
 class ViajeEditar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        viaje = get_object_or_404(Viaje, pk=kwargs.get('viaje_id'))
+        if not (request.user.is_staff or viaje.usuario == request.user):
+            return HttpResponseForbidden('No tienes permiso para editar este viaje')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, viaje_id):
         viaje = get_object_or_404(Viaje, pk=viaje_id)
         form = ViajeForm(instance=viaje)
@@ -272,6 +309,12 @@ class ViajeEditar(LoginRequiredMixin, View):
         return render(request, 'Viaje/viajeCRUD.html', cdx)
 
 class ViajeEliminar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        viaje = get_object_or_404(Viaje, pk=kwargs.get('viaje_id'))
+        if not (request.user.is_staff or viaje.usuario == request.user):
+            return HttpResponseForbidden('No tienes permiso para eliminar este viaje')
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, viaje_id):
         viaje = get_object_or_404(Viaje, pk=viaje_id)
         viaje.delete()

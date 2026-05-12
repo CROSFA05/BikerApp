@@ -304,6 +304,7 @@
     <table>
       <thead>
         <tr>
+          <th>Imagen</th>
           <th>Nombre</th>
           <th>Descripción</th>
           <th>Estado</th>
@@ -313,6 +314,13 @@
       <tbody>
         {% for grupo in grupos %}
         <tr>
+          <td>
+            {% if grupo.imagen %}
+              <img src="{{ grupo.imagen.url }}" alt="{{ grupo.nombre }}" style="width: 3rem; height: 3rem; object-fit: cover; border-radius: 0.75rem; box-shadow: 2px 2px 6px var(--neu-shadow-dark), -2px -2px 6px var(--neu-shadow-light);">
+            {% else %}
+              <span class="iconify" data-icon="lucide:image" data-width="24" style="color: #9ca3af; display: block; margin: 0 auto;"></span>
+            {% endif %}
+          </td>
           <td><strong>{{ grupo.nombre }}</strong></td>
           <td>{{ grupo.descripcion|truncatewords:15 }}</td>
           <td>
