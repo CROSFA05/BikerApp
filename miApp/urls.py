@@ -1,10 +1,23 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from miApp.views import (
     Home, Register, ListaGrupos, GrupoAlta, GrupoEditar, GrupoEliminar, 
     ListaVehiculos, VehiculoAlta, VehiculoEditar, VehiculoEliminar,
     ListaContactos, ContactoAlta, ContactoEditar, ContactoEliminar,
     ListaUsuarios, UsuarioAlta, UsuarioEditar, UsuarioEliminar,
     ListaViajes, ViajeAlta, ViajeEditar, ViajeEliminar)
+from miApp.api_views import (
+    LoginView, LogoutView, RegisterView, UserProfileView,
+    UsuarioViewSet, GrupoBikerViewSet, VehiculoViewSet,
+    ContactoEmergenciaViewSet, ViajeViewSet, UsuarioVehiculoViewSet)
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'grupos-biker', GrupoBikerViewSet)
+router.register(r'vehiculos', VehiculoViewSet)
+router.register(r'contactos-emergencia', ContactoEmergenciaViewSet)
+router.register(r'viajes', ViajeViewSet)
+router.register(r'usuarios-vehiculos', UsuarioVehiculoViewSet)
 
 urlpatterns = [
     path('', Home.as_view(), name='home'),
@@ -29,4 +42,9 @@ urlpatterns = [
     path('viajes/alta/', ViajeAlta.as_view(), name='viajeAlta'),
     path('viajes/editar/<int:viaje_id>/', ViajeEditar.as_view(), name='viajeEditar'),
     path('viajes/eliminar/<int:viaje_id>/', ViajeEliminar.as_view(), name='viajeEliminar'),
+    path('api/login/', LoginView.as_view(), name='api_login'),
+    path('api/logout/', LogoutView.as_view(), name='api_logout'),
+    path('api/register/', RegisterView.as_view(), name='api_register'),
+    path('api/perfil/', UserProfileView.as_view(), name='api_perfil'),
+    path('api/', include(router.urls)),
 ]
