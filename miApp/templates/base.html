@@ -828,6 +828,7 @@
         <span>Chat</span>
       </a>
     </nav>
+    {% if user.is_authenticated %}
     <div class="mobile-sidebar-footer">
       <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
@@ -837,6 +838,7 @@
         </button>
       </form>
     </div>
+    {% endif %}
   </div>
 
   <!-- Navigation Sidebar (desktop only) -->
@@ -866,6 +868,7 @@
       </li>
     </ul>
 
+    {% if user.is_authenticated %}
     <div class="mt-auto w-full">
       <div class="navbar__link w-full pointer-events-none opacity-80" title="{{ user.get_full_name }}">
         <i data-feather="user"></i>
@@ -879,6 +882,7 @@
       </button>
     </form>
     </div>
+    {% endif %}
   </nav>
 
   <!-- Main Content Area -->
