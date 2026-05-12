@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<style>
+  .register-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: linear-gradient(145deg, var(--neu-bg-primary), var(--neu-bg-secondary));
+    border-radius: 2rem;
+    box-shadow: 8px 8px 16px var(--neu-shadow-dark), -8px -8px 16px var(--neu-shadow-light);
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: var(--neu-bg-secondary);
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
+    transition: all 0.3s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    box-shadow: inset 6px 6px 12px var(--neu-shadow-dark), inset -6px -6px 12px var(--neu-shadow-light);
+  }
+
+  .form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: var(--neu-bg-secondary);
+    box-shadow: inset 4px 4px 8px var(--neu-shadow-dark), inset -4px -4px 8px var(--neu-shadow-light);
+    transition: all 0.3s ease;
+  }
+
+  .form-select:focus {
+    outline: none;
+    box-shadow: inset 6px 6px 12px var(--neu-shadow-dark), inset -6px -6px 12px var(--neu-shadow-light);
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, var(--neu-primary), var(--neu-primary-dark));
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 4px 4px 8px var(--neu-shadow-dark), -4px -4px 8px var(--neu-shadow-light);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
+  }
+
+  .link {
+    color: var(--neu-primary);
+    text-decoration: none;
+  }
+
+  .link:hover {
+    text-decoration: underline;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .form-row .form-group {
+    flex: 1;
+  }
+
+  @media (max-width: 640px) {
+    .form-row {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<div class="register-container">
+  <h1 class="text-2xl font-bold text-center mb-6">Crear Cuenta</h1>
+  
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mb-4 p-3 rounded {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row mb-4">
+      <div class="form-group">
+        <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium mb-2">Nombre:</label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.first_name.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium mb-2">Apellido:</label>
+        {{ form.last_name }}
+        {% if form.last_name.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.last_name.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium mb-2">Email:</label>
+      {{ form.email }}
+      {% if form.email.errors %}
+        <div class="text-red-500 text-sm mt-1">
+          {% for error in form.email.errors %}{{ error }}{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    
+    <div class="form-row mb-4">
+      <div class="form-group">
+        <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium mb-2">Contraseña:</label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.password1.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium mb-2">Confirmar Contraseña:</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.password2.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="form-row mb-4">
+      <div class="form-group">
+        <label for="{{ form.sexo.id_for_label }}" class="block text-sm font-medium mb-2">Sexo:</label>
+        {{ form.sexo }}
+        {% if form.sexo.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.sexo.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.fecha_nacimiento.id_for_label }}" class="block text-sm font-medium mb-2">Fecha de Nacimiento:</label>
+        {{ form.fecha_nacimiento }}
+        {% if form.fecha_nacimiento.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.fecha_nacimiento.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="form-row mb-4">
+      <div class="form-group">
+        <label for="{{ form.tipo_de_sangre.id_for_label }}" class="block text-sm font-medium mb-2">Tipo de Sangre:</label>
+        {{ form.tipo_de_sangre }}
+        {% if form.tipo_de_sangre.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.tipo_de_sangre.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.telefono.id_for_label }}" class="block text-sm font-medium mb-2">Teléfono:</label>
+        {{ form.telefono }}
+        {% if form.telefono.errors %}
+          <div class="text-red-500 text-sm mt-1">
+            {% for error in form.telefono.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      <label for="{{ form.grupo_biker.id_for_label }}" class="block text-sm font-medium mb-2">Grupo Biker (opcional):</label>
+      {{ form.grupo_biker }}
+      {% if form.grupo_biker.errors %}
+        <div class="text-red-500 text-sm mt-1">
+          {% for error in form.grupo_biker.errors %}{{ error }}{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    
+    <button type="submit" class="btn-primary">Crear Cuenta</button>
+  </form>
+  
+  <div class="text-center mt-6">
+    <p>¿Ya tienes cuenta? <a href="{% url 'login' %}" class="link">Inicia sesión aquí</a></p>
+  </div>
+</div>
+{% endblock %}
