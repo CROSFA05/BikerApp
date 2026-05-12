@@ -193,6 +193,31 @@
   .dark .empty-state-text {
     color: #9ca3af;
   }
+
+  @media (max-width: 768px) {
+    .container-main { padding: 1rem 0.75rem; }
+    .header { flex-direction: column; align-items: flex-start; }
+    .header h1 { font-size: 1.5rem; }
+    .btn-new { width: 100%; justify-content: center; }
+    .table-container { padding: 1rem; }
+    thead th { padding: 0.75rem; font-size: 0.75rem; }
+    tbody td { padding: 0.75rem; }
+  }
+
+  @media (max-width: 640px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr { padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0.75rem; border: 1px solid rgba(139,94,60,0.1); }
+    tbody td { padding: 0.4rem 0; text-align: right; border-bottom: none; }
+    tbody td::before { content: attr(data-label); float: left; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: #8d7c6b; }
+    .actions { justify-content: flex-end; }
+  }
+
+  @media (max-width: 480px) {
+    .container-main { padding: 0.5rem; }
+    .header h1 { font-size: 1.25rem; }
+    .table-container { padding: 0.75rem; border-radius: 1rem; }
+  }
 </style>
 
 <div class="container-main">
@@ -236,11 +261,11 @@
       <tbody>
         {% for contacto in contactos %}
         <tr>
-          <td>{{ contacto.usuario }}</td>
-          <td>{{ contacto.nombre }}</td>
-          <td>{{ contacto.telefono }}</td>
-          <td>{{ contacto.relacion }}</td>
-          <td>
+          <td data-label="Usuario">{{ contacto.usuario }}</td>
+          <td data-label="Nombre">{{ contacto.nombre }}</td>
+          <td data-label="Teléfono">{{ contacto.telefono }}</td>
+          <td data-label="Relación">{{ contacto.relacion }}</td>
+          <td data-label="Acciones">
             <div class="actions">
               <a href="{% url 'contactoEditar' contacto.id %}" class="btn-sm btn-edit">Editar</a>
               <form method="post" action="{% url 'contactoEliminar' contacto.id %}" style="display: inline;" onsubmit="return confirm('¿Eliminar este contacto?');">

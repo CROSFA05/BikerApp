@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
-from .models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje, UsuarioVehiculo
+from .models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje, UsuarioVehiculo, MensajeGrupo
 from .forms import GrupoBikerForm, VehiculoForm, ContactoEmergenciaForm, UsuarioForm, UsuarioChangeForm, ViajeForm
 
 class Home(View):
@@ -26,7 +26,7 @@ class Home(View):
                 contactos_count = ContactoEmergencia.objects.filter(usuario=user).count()
                 vehiculos_count = UsuarioVehiculo.objects.filter(usuario=user).count()
             cdx = {
-                'titulo': 'Inicio - Biker App',
+                'titulo': 'Usuario - Biker App',
                 'info_usuario': user,
                 'grupo': grupo,
                 'stats': {
@@ -47,7 +47,7 @@ class Register(View):
         return render(request, 'registration/register.html', cdx)
     
     def post(self, request):
-        form = UsuarioForm(request.POST)
+        form = UsuarioForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -63,6 +63,11 @@ class ListaGrupos(LoginRequiredMixin, View):
         return render(request, 'GrupoBiker/grupoBiker.html', cdx)
 
 class GrupoAlta(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden('Solo administradores pueden crear grupos')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         form = GrupoBikerForm()
         cdx = {'titulo': 'Alta de Grupo', 'form': form, 'modo': 'crear'}
@@ -119,8 +124,13 @@ class ListaVehiculos(LoginRequiredMixin, View):
         return render(request, 'Vehiculo/vehiculo.html', cdx)
 
 class VehiculoAlta(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden('Solo administradores pueden crear vehículos')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
-        form = VehiculoForm(initial={'usuarios': [request.user]})
+        form = VehiculoForm()
         cdx = {'titulo': 'Alta de Vehiculo', 'form': form, 'modo': 'crear'}
         return render(request, 'Vehiculo/vehiculoCRUD.html', cdx)
     
@@ -135,9 +145,8 @@ class VehiculoAlta(LoginRequiredMixin, View):
 
 class VehiculoEditar(LoginRequiredMixin, View):
     def dispatch(self, request, *args, **kwargs):
-        vehiculo = get_object_or_404(Vehiculo, pk=kwargs.get('vehiculo_id'))
-        if not (request.user.is_staff or vehiculo.usuarios.filter(id=request.user.id).exists()):
-            return HttpResponseForbidden('No tienes permiso para editar este vehículo')
+        if not request.user.is_staff:
+            return HttpResponseForbidden('Solo administradores pueden editar vehículos')
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, vehiculo_id):
@@ -179,12 +188,12 @@ class ListaContactos(LoginRequiredMixin, View):
 
 class ContactoAlta(LoginRequiredMixin, View):
     def get(self, request):
-        form = ContactoEmergenciaForm()
+        form = ContactoEmergenciaForm(user=request.user)
         cdx = {'titulo': 'Alta de Contacto de Emergencia', 'form': form, 'modo': 'crear'}
         return render(request, 'Contactos/contactoCRUD.html', cdx)
     
     def post(self, request):
-        form = ContactoEmergenciaForm(request.POST)
+        form = ContactoEmergenciaForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Contacto creado exitosamente')
@@ -201,13 +210,13 @@ class ContactoEditar(LoginRequiredMixin, View):
 
     def get(self, request, contacto_id):
         contacto = get_object_or_404(ContactoEmergencia, pk=contacto_id)
-        form = ContactoEmergenciaForm(instance=contacto)
+        form = ContactoEmergenciaForm(instance=contacto, user=request.user)
         cdx = {'titulo': 'Editar Contacto de Emergencia', 'form': form, 'contacto': contacto, 'modo': 'editar'}
         return render(request, 'Contactos/contactoCRUD.html', cdx)
     
     def post(self, request, contacto_id):
         contacto = get_object_or_404(ContactoEmergencia, pk=contacto_id)
-        form = ContactoEmergenciaForm(request.POST, instance=contacto)
+        form = ContactoEmergenciaForm(request.POST, instance=contacto, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Contacto actualizado exitosamente')
@@ -231,25 +240,69 @@ class ContactoEliminar(LoginRequiredMixin, View):
 class ListaUsuarios(LoginRequiredMixin, View):
     def get(self, request):
         if request.user.is_staff:
-            usuarios = Usuario.objects.select_related('grupo_biker').all()
+            usuarios = Usuario.objects.select_related('grupo_biker').exclude(id=request.user.id).all()
         elif request.user.grupo_biker:
-            usuarios = Usuario.objects.select_related('grupo_biker').filter(grupo_biker=request.user.grupo_biker)
+            usuarios = Usuario.objects.select_related('grupo_biker').filter(grupo_biker=request.user.grupo_biker).exclude(id=request.user.id)
         else:
-            usuarios = Usuario.objects.filter(id=request.user.id)
-        usuarios = sorted(usuarios, key=lambda u: u.id != request.user.id)
+            usuarios = Usuario.objects.none()
         cdx = {'usuarios': usuarios}
         return render(request, 'Usuario/usuario.html', cdx)
 
+class UsuarioDetalle(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        usuario = get_object_or_404(Usuario, pk=kwargs.get('usuario_id'))
+        if not (request.user.is_staff or request.user == usuario or (
+            request.user.grupo_biker and usuario.grupo_biker == request.user.grupo_biker
+        )):
+            return HttpResponseForbidden('No tienes permiso para ver este perfil')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, usuario_id):
+        usuario = get_object_or_404(Usuario, pk=usuario_id)
+        grupo = usuario.grupo_biker
+        if request.user.is_staff:
+            viajes_count = Viaje.objects.filter(usuario=usuario).count()
+            contactos_count = ContactoEmergencia.objects.filter(usuario=usuario).count()
+            vehiculos_count = UsuarioVehiculo.objects.filter(usuario=usuario).count()
+        elif grupo:
+            viajes_count = Viaje.objects.filter(usuario=usuario).count()
+            contactos_count = ContactoEmergencia.objects.filter(usuario=usuario).count()
+            vehiculos_count = UsuarioVehiculo.objects.filter(usuario=usuario).count()
+        else:
+            viajes_count = Viaje.objects.filter(usuario=usuario).count()
+            contactos_count = ContactoEmergencia.objects.filter(usuario=usuario).count()
+            vehiculos_count = UsuarioVehiculo.objects.filter(usuario=usuario).count()
+        cdx = {
+            'titulo': f'{usuario.first_name} {usuario.last_name} - Biker App',
+            'info_usuario': usuario,
+            'grupo': grupo,
+            'stats': {
+                'viajes': viajes_count,
+                'contactos': contactos_count,
+                'vehiculos': vehiculos_count,
+            },
+            'es_perfil_propio': request.user == usuario,
+        }
+        return render(request, 'Usuario/usuarioDetalle.html', cdx)
+
 class UsuarioAlta(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden('Solo administradores pueden crear usuarios')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         form = UsuarioForm()
         cdx = {'titulo': 'Alta de Usuario', 'form': form, 'modo': 'crear'}
         return render(request, 'Usuario/usuarioCRUD.html', cdx)
     
     def post(self, request):
-        form = UsuarioForm(request.POST)
+        form = UsuarioForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            UsuarioVehiculo.objects.filter(usuario=user).delete()
+            for v in form.cleaned_data.get('vehiculos', []):
+                UsuarioVehiculo.objects.create(usuario=user, vehiculo=v)
             messages.success(request, 'Usuario creado exitosamente')
             return redirect('usuarios')
         cdx = {'titulo': 'Alta de Usuario', 'form': form, 'modo': 'crear'}
@@ -270,9 +323,12 @@ class UsuarioEditar(LoginRequiredMixin, View):
     
     def post(self, request, usuario_id):
         usuario = get_object_or_404(Usuario, pk=usuario_id)
-        form = UsuarioChangeForm(request.POST, instance=usuario)
+        form = UsuarioChangeForm(request.POST, request.FILES, instance=usuario)
         if form.is_valid():
             form.save()
+            UsuarioVehiculo.objects.filter(usuario=usuario).delete()
+            for v in form.cleaned_data.get('vehiculos', []):
+                UsuarioVehiculo.objects.create(usuario=usuario, vehiculo=v)
             messages.success(request, 'Usuario actualizado exitosamente')
             return redirect('usuarios')
         cdx = {'titulo': 'Editar Usuario', 'form': form, 'usuario': usuario, 'modo': 'editar'}
@@ -280,8 +336,9 @@ class UsuarioEditar(LoginRequiredMixin, View):
 
 class UsuarioEliminar(LoginRequiredMixin, View):
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_staff:
-            return HttpResponseForbidden('Solo administradores pueden eliminar usuarios')
+        usuario = get_object_or_404(Usuario, pk=kwargs.get('usuario_id'))
+        if not (request.user.is_staff or request.user == usuario):
+            return HttpResponseForbidden('No tienes permiso para eliminar este usuario')
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, usuario_id):
@@ -351,3 +408,39 @@ class ViajeEliminar(LoginRequiredMixin, View):
         viaje.delete()
         messages.success(request, 'Viaje eliminado exitosamente')
         return redirect('viajes')
+
+
+class ChatGrupo(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.grupo_biker and not request.user.is_staff:
+            return HttpResponseForbidden('Debes pertenecer a un grupo para usar el chat')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_grupo(self, request):
+        if request.user.is_staff and 'grupo_id' in self.kwargs:
+            return get_object_or_404(GrupoBiker, pk=self.kwargs['grupo_id'])
+        return request.user.grupo_biker
+
+    def get(self, request, **kwargs):
+        grupo = self.get_grupo(request)
+        if not grupo:
+            return HttpResponseForbidden('No hay grupo asignado')
+        mensajes = MensajeGrupo.obtener_historial(grupo)
+        cdx = {
+            'grupo': grupo,
+            'mensajes': mensajes,
+            'total_mensajes': MensajeGrupo.objects.filter(grupo=grupo).count(),
+            'limite': MensajeGrupo.LIMITE(),
+        }
+        return render(request, 'Chat/chatGrupo.html', cdx)
+
+    def post(self, request, **kwargs):
+        grupo = self.get_grupo(request)
+        if not grupo:
+            return HttpResponseForbidden('No hay grupo asignado')
+        contenido = request.POST.get('contenido', '').strip()
+        if contenido:
+            MensajeGrupo.enviar(grupo, request.user, contenido)
+        else:
+            messages.error(request, 'El mensaje no puede estar vacío')
+        return redirect('chat_grupo')

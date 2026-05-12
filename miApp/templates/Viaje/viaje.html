@@ -149,6 +149,33 @@
     border-radius: 1.5rem;
     border: 2px dashed rgba(139, 94, 60, 0.2);
   }
+
+  @media (max-width: 768px) {
+    .viajes-container { padding: 1rem; gap: 1.5rem; }
+    .header { flex-direction: column; text-align: center; }
+    .header h1 { font-size: 1.5rem; }
+    .btn-new { width: 100%; justify-content: center; }
+    .table-container { padding: 1rem; }
+    thead th { padding: 0.75rem; font-size: 0.7rem; }
+    tbody td { padding: 1rem 0.75rem; }
+    .actions { flex-direction: column; }
+    .btn-sm { width: 100%; justify-content: center; }
+  }
+
+  @media (max-width: 640px) {
+    .viajes-container { padding: 0.75rem; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr { padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0.75rem; border: 1px solid rgba(139,94,60,0.1); }
+    tbody td { padding: 0.4rem 0; text-align: right; border: none; }
+    tbody td::before { content: attr(data-label); float: left; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: #8d7c6b; }
+  }
+
+  @media (max-width: 480px) {
+    .viajes-container { padding: 0.5rem; }
+    .header h1 { font-size: 1.25rem; }
+    .empty-state { padding: 3rem 0.5rem; }
+  }
 </style>
 
 <div class="viajes-container">
@@ -194,15 +221,15 @@
       <tbody>
         {% for viaje in viajes %}
         <tr>
-          <td><strong>{{ viaje.usuario.first_name }} {{ viaje.usuario.last_name }}</strong></td>
-          <td>{{ viaje.lugar_de_inicio }}</td>
-          <td>{{ viaje.lugar_de_fin|default:"Sin definir" }}</td>
-          <td>
+          <td data-label="Usuario"><strong>{{ viaje.usuario.first_name }} {{ viaje.usuario.last_name }}</strong></td>
+          <td data-label="Origen">{{ viaje.lugar_de_inicio }}</td>
+          <td data-label="Destino">{{ viaje.lugar_de_fin|default:"Sin definir" }}</td>
+          <td data-label="Estado">
             <span class="badge badge-status">
               {{ viaje.get_estado_display }}
             </span>
           </td>
-          <td>
+          <td data-label="Acciones">
             <div class="actions">
               <a href="{% url 'viajeEditar' viaje.id %}" class="btn-sm btn-edit">
                 <span class="iconify" data-icon="lucide:edit" data-width="16"></span>

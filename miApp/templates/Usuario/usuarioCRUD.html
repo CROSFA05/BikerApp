@@ -194,7 +194,14 @@
   </div>
 
   <div class="form-section">
-    <form method="post">
+    {% if form.non_field_errors %}
+    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:0.75rem;padding:1rem;margin-bottom:1.5rem;">
+      {% for error in form.non_field_errors %}
+        <div style="color:#dc2626;font-size:0.875rem;">{{ error }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
       <!-- Información de Acceso -->
@@ -203,6 +210,11 @@
         Información de Acceso
       </div>
       <div class="form-row">
+        {% if modo == 'editar' and usuario.imagen %}
+        <div style="text-align:center;margin-bottom:1rem;grid-column:1/-1;">
+          <img src="{{ usuario.imagen.url }}" alt="Foto de perfil" style="width:100px;height:100px;border-radius:50%;object-fit:cover;box-shadow:4px 4px 10px var(--neu-shadow-dark),-4px -4px 10px var(--neu-shadow-light);">
+        </div>
+        {% endif %}
         <div class="form-group">
           <label for="id_email">Email <span style="color: #ef4444;">*</span></label>
           <input type="email" name="email" id="id_email" value="{{ form.email.value|default:'' }}" required>
@@ -241,13 +253,22 @@
         </div>
 
         <div class="form-group">
+          <label for="id_rol">Rol</label>
+          <select name="rol" id="id_rol">
+            {% for choice in form.rol.field.choices %}
+              <option value="{{ choice.0 }}" {% if form.rol.value == choice.0|stringformat:'s' %}selected{% endif %}>{{ choice.1 }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
           <label for="id_telefono">Teléfono</label>
           <input type="text" name="telefono" id="id_telefono" value="{{ form.telefono.value|default:'' }}" maxlength="10" placeholder="10 dígitos">
         </div>
 
         <div class="form-group">
           <label for="id_fecha_nacimiento">Fecha de Nacimiento</label>
-          <input type="date" name="fecha_nacimiento" id="id_fecha_nacimiento" value="{{ form.fecha_nacimiento.value|default:'' }}">
+          <input type="date" name="fecha_nacimiento" id="id_fecha_nacimiento" value="{% if form.fecha_nacimiento.value %}{{ form.fecha_nacimiento.value|date:'Y-m-d' }}{% endif %}">
         </div>
 
         <div class="form-group">
@@ -268,6 +289,11 @@
             {% endfor %}
           </select>
           {% if form.grupo_biker.errors %}<div class="form-error">{{ form.grupo_biker.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label for="id_imagen">Foto de Perfil</label>
+          <input type="file" name="imagen" id="id_imagen" accept="image/*" class="form-input" style="padding:0.5rem;">
+          {% if form.imagen.value %}<p style="font-size:0.8rem;color:#8d7c6b;margin-top:0.25rem;">Archivo actual: {{ form.imagen.value }}</p>{% endif %}
         </div>
       </div>
 

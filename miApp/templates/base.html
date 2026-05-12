@@ -462,6 +462,58 @@
         max-width: 100%;
         padding-top: 1rem;
       }
+
+      #toast-container {
+        right: 0.5rem;
+        max-width: calc(100vw - 1rem);
+      }
+
+      #toast-container .toast-enter {
+        min-width: unset;
+        max-width: 100%;
+      }
+
+      #modal-dialog {
+        max-width: calc(100% - 2rem);
+        margin: 0 1rem;
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar__link {
+        height: 2.75rem;
+        padding: 0 0.6rem;
+        gap: 0.3rem;
+      }
+
+      .navbar__link i {
+        font-size: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+
+      .navbar__link span {
+        font-size: 0.75rem;
+        margin-left: 0.3rem;
+      }
+
+      .navbar__menu {
+        gap: 0.3rem;
+      }
+
+      main {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+
+      #modal-dialog {
+        padding: 1.25rem;
+      }
+
+      .navbar__item:last-child::before {
+        display: none;
+      }
     }
 
     /* Tab Active State */
@@ -525,39 +577,27 @@
     }
 
     .shimmer::after {
-    /* Gooey Indicator */
-    .navbar__item:last-child::before {
       content: '';
       position: absolute;
-      opacity: 0;
-      z-index: -1;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       background: linear-gradient(90deg,
           transparent,
           rgba(255, 255, 255, 0.4),
           transparent);
       animation: shimmer 1.5s infinite;
-      left: 1rem;
-      width: 3.5rem;
-      height: 3.5rem;
-      background: var(--nav-primary);
-      border-radius: calc(var(--nav-border-radius) * 1.75);
-      transition: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      pointer-events: none;
+    }
+
+    /* Gooey Indicator - DISABLED */
+    .navbar__item:last-child::before {
+      display: none;
     }
 
     /* Skeleton Loading */
     @keyframes skeleton {
-      from {
-        background-position: 200% 0;
-      }
+      from { background-position: 200% 0; }
+      to { background-position: -200% 0; }
+    }
 
-      to {
-        background-position: -200% 0;
-      }
     @keyframes gooeyEffect {
       0% { transform: scale(1, 1) translateY(0); }
       50% { transform: scale(0.8, 1.2) translateY(0); }
@@ -572,29 +612,6 @@
       background-size: 200% 100%;
       animation: skeleton 1.5s infinite;
     }
-    /* Positioning Logic for 5 Items */
-    .navbar__item:nth-child(1):hover ~ .navbar__item:last-child::before { top: 0; opacity: 1; animation: gooeyEffect 400ms ease; }
-    .navbar__item:nth-child(2):hover ~ .navbar__item:last-child::before { top: 3.5rem; opacity: 1; animation: gooeyEffect 400ms ease; }
-    .navbar__item:nth-child(3):hover ~ .navbar__item:last-child::before { top: 7rem; opacity: 1; animation: gooeyEffect 400ms ease; }
-    .navbar__item:nth-child(4):hover ~ .navbar__item:last-child::before { top: 10.5rem; opacity: 1; animation: gooeyEffect 400ms ease; }
-    .navbar__item:nth-child(5):hover::before { top: 14rem; opacity: 1; animation: gooeyEffect 400ms ease; }
-
-
-    /* Chart Animations */
-    @keyframes grow-up {
-      from {
-        transform: scaleY(0);
-      }
-
-      to {
-        transform: scaleY(1);
-      }
-    }
-
-    .chart-bar {
-      animation: grow-up 0.8s ease-out;
-      transform-origin: bottom;
-    }
 
     /* Tooltip */
     .tooltip-container:hover .tooltip,
@@ -605,14 +622,22 @@
     }
 
     .tooltip {
-    /* Hide indicator when not hovering menu */
-    .navbar__menu:not(:hover) .navbar__item:last-child::before {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: #333;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      white-space: nowrap;
       opacity: 0;
       visibility: hidden;
-      transform: translateX(-50%) translateY(4px);
       transition: all var(--transition-fast);
-      transition: opacity 250ms;
     }
+
+    /* Hide indicator when not hovering menu - DISABLED */
 
     /* Accordion Panel */
     .accordion-panel {
@@ -644,9 +669,9 @@
 
   <!-- Navigation Sidebar -->
   <nav class="navbar">
-    <a href="{% url 'home' %}" class="navbar__link {% if request.path == '/' %}active{% endif %}" title="Home">
-      <i data-feather="home"></i>
-      <span>Home</span>
+    <a href="{% url 'home' %}" class="navbar__link {% if request.path == '/' %}active{% endif %}" title="Usuario">
+      <i data-feather="user"></i>
+      <span>Usuario</span>
     </a>
     <ul class="navbar__menu">
       <li class="navbar__item">
@@ -663,6 +688,9 @@
       </li>
       <li class="navbar__item">
         <a href="{% url 'viajes' %}" class="navbar__link {% if '/viajes/' in request.path %}active{% endif %}" title="Viajes"><i data-feather="navigation"></i><span>Viajes</span></a>
+      </li>
+      <li class="navbar__item">
+        <a href="{% url 'chat_grupo' %}" class="navbar__link {% if '/chat/' in request.path %}active{% endif %}" title="Chat"><i data-feather="message-circle"></i><span>Chat</span></a>
       </li>
     </ul>
 

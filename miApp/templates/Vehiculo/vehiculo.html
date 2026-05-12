@@ -157,6 +157,27 @@
       width: 100%;
       justify-content: center;
     }
+    .table-container { padding: 1rem; }
+    thead th { padding: 0.75rem; font-size: 0.7rem; }
+    tbody td { padding: 1rem 0.75rem; }
+  }
+
+  @media (max-width: 640px) {
+    .vehiculos-container { padding: 0.75rem; gap: 1.5rem; }
+    .header h1 { font-size: 1.5rem; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr { padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0.75rem; border: 1px solid rgba(139,94,60,0.1); }
+    tbody td { padding: 0.4rem 0; text-align: right; border: none; }
+    tbody td::before { content: attr(data-label); float: left; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: #8d7c6b; }
+    .actions { justify-content: flex-end; }
+    .btn-sm { font-size: 0.8rem; padding: 0.4rem 0.75rem; }
+  }
+
+  @media (max-width: 480px) {
+    .vehiculos-container { padding: 0.5rem; }
+    .header h1 { font-size: 1.25rem; }
+    .empty-state { padding: 3rem 0.5rem; }
   }
 </style>
 
@@ -166,10 +187,12 @@
             <span class="iconify" data-icon="lucide:truck" data-width="32" style="vertical-align: -8px; margin-right: 0.5rem;"></span>
             Vehículos
         </h1>
+        {% if user.is_staff %}
         <a href="{% url 'vehiculoAlta' %}" class="btn-new">
             <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
             Nuevo Vehículo
         </a>
+        {% endif %}
     </div>
 
     {% if messages %}
@@ -204,18 +227,18 @@
             <tbody>
                 {% for vehiculo in vehiculos %}
                 <tr>
-                    <td><strong>{{ vehiculo.marca }}</strong></td>
-                    <td>{{ vehiculo.modelo }}</td>
-                    <td>{{ vehiculo.año }}</td>
-                    <td>{{ vehiculo.color }}</td>
-                    <td><code>{{ vehiculo.matricula }}</code></td>
-                    <td>
+                    <td data-label="Marca"><strong>{{ vehiculo.marca }}</strong></td>
+                    <td data-label="Modelo">{{ vehiculo.modelo }}</td>
+                    <td data-label="Año">{{ vehiculo.año }}</td>
+                    <td data-label="Color">{{ vehiculo.color }}</td>
+                    <td data-label="Matrícula"><code>{{ vehiculo.matricula }}</code></td>
+                    <td data-label="Acciones">
                         <div class="actions">
+                            {% if user.is_staff %}
                             <a href="{% url 'vehiculoEditar' vehiculo.id %}" class="btn-sm btn-edit">
                                 <span class="iconify" data-icon="lucide:edit" data-width="16"></span>
                                 Editar
                             </a>
-                            {% if user.is_staff %}
                             <form method="post" action="{% url 'vehiculoEliminar' vehiculo.id %}" style="display:inline;" onsubmit="return confirm('¿Eliminar este vehículo?');">
                                 {% csrf_token %}
                                 <button type="submit" class="btn-sm btn-delete">
@@ -223,6 +246,8 @@
                                     Eliminar
                                 </button>
                             </form>
+                            {% else %}
+                            <span style="color:#9ca3af;font-size:0.85rem;">Sin acceso</span>
                             {% endif %}
                         </div>
                     </td>

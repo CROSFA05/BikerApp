@@ -30,6 +30,16 @@
     transform: translateY(-2px);
     box-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
   }
+
+  @media (max-width: 640px) {
+    .logout-container { margin: 2rem auto; padding: 1.5rem; max-width: 90%; }
+    .logout-container h1 { font-size: 1.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .logout-container { margin: 1rem auto; padding: 1.25rem; }
+    .btn-primary { width: 100%; text-align: center; }
+  }
 </style>
 
 <div class="logout-container">

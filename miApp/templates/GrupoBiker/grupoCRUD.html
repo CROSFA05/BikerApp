@@ -182,7 +182,7 @@
   </div>
 
   <div class="form-section">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
       <div class="section-title">
@@ -205,6 +205,16 @@
       <div class="form-group checkbox-group">
         <input type="checkbox" name="activo" id="id_activo" {% if form.activo.value %}checked{% endif %}>
         <label for="id_activo">Grupo Activo</label>
+      </div>
+
+      <div class="form-group">
+        <label for="id_imagen">Imagen del Grupo</label>
+        {% if modo == 'editar' and grupo.imagen %}
+          <div style="margin-bottom:0.5rem;">
+            <img src="{{ grupo.imagen.url }}" alt="Imagen actual" style="width:120px;height:120px;border-radius:1rem;object-fit:cover;box-shadow:4px 4px 10px var(--neu-shadow-dark),-4px -4px 10px var(--neu-shadow-light);">
+          </div>
+        {% endif %}
+        <input type="file" name="imagen" id="id_imagen" accept="image/*" class="form-input" style="padding:0.5rem;">
       </div>
 
       <div class="form-actions">

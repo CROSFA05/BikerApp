@@ -64,6 +64,7 @@ class Usuario(AbstractUser):
     telefono = models.CharField(max_length = 10, null = True, blank = True, db_index = True)
     grupo_biker = models.ForeignKey(GrupoBiker, on_delete=models.CASCADE, null = True, blank = True)
     activo = models.BooleanField(default=True)
+    imagen = models.ImageField(upload_to='usuarios/', null=True, blank=True)
 
     vehiculos = models.ManyToManyField('Vehiculo', through='UsuarioVehiculo', related_name='usuarios', blank=True)
 
@@ -134,3 +135,39 @@ class Viaje(models.Model):
 
     def __str__(self):
         return f"{self.usuario} - {self.lugar_de_inicio} a {self.lugar_de_fin}"
+
+
+MENSAJE_LIMITE = 1000
+
+class MensajeGrupo(models.Model):
+    grupo = models.ForeignKey(GrupoBiker, on_delete=models.CASCADE, related_name='mensajes')
+    remitente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='mensajes_grupo')
+    contenido = models.TextField(max_length=500)
+    fecha = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ['fecha']
+
+    def __str__(self):
+        return f'[{self.grupo.nombre}] {self.remitente.first_name}: {self.contenido[:30]}'
+
+    @classmethod
+    def LIMITE(cls):
+        return 1000
+
+    @classmethod
+    def enviar(cls, grupo, remitente, contenido):
+        msg = cls.objects.create(grupo=grupo, remitente=remitente, contenido=contenido)
+        cls._purgar(grupo)
+        return msg
+
+    @classmethod
+    def _purgar(cls, grupo):
+        exceso = cls.objects.filter(grupo=grupo).count() - MENSAJE_LIMITE
+        if exceso > 0:
+            ids = cls.objects.filter(grupo=grupo).values_list('pk', flat=True)[:exceso]
+            cls.objects.filter(pk__in=list(ids)).delete()
+
+    @classmethod
+    def obtener_historial(cls, grupo, max_mensajes=50):
+        return cls.objects.filter(grupo=grupo).order_by('-fecha')[:max_mensajes][::-1]
