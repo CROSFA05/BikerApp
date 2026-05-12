@@ -22,19 +22,19 @@
   .users-header h1 {
     font-size: 2rem;
     font-weight: 600;
-    color: #8b4513; /* Warm brown */
+    color: #5e412f;
     margin: 0;
   }
 
   .dark .users-header h1 {
-    color: #f3f4f6;
+    color: #f3e9dc;
   }
   
 
 
   .btn-new {
-    background: linear-gradient(135deg, #ffd700 0%, #daa520 100%); /* Gold to goldenrod */
-    color: #654321; /* Dark brown text */
+    background: linear-gradient(135deg, #b48b6a 0%, #7f5f3d 100%);
+    color: #faf4eb;
     padding: 0.75rem 1.5rem;
     border-radius: 0.75rem;
     border: none;
@@ -44,14 +44,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+    box-shadow: 0 4px 12px rgba(124, 90, 59, 0.35);
     transition: all 0.3s;
   }
 
   .btn-new:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(218, 165, 32, 0.5);
-    color: #654321;
+    box-shadow: 0 6px 16px rgba(124, 90, 59, 0.45);
+    color: #faf4eb;
     text-decoration: none;
   }
 
@@ -84,15 +84,15 @@
   }
 
   .alert-success {
-    background: rgba(255, 215, 0, 0.1); /* Light gold */
-    border-left: 4px solid #daa520;
-    color: #b8860b; /* Dark goldenrod */
+    background: rgba(191, 173, 143, 0.16);
+    border-left: 4px solid #a17a4b;
+    color: #6a5133;
   }
 
   .alert-error {
-    background: rgba(205, 92, 92, 0.1); /* Light indianred */
-    border-left: 4px solid #cd5c5c;
-    color: #8b0000; /* Dark red */
+    background: rgba(205, 132, 102, 0.14);
+    border-left: 4px solid #b55d3f;
+    color: #7a4328;
   }
 
   .alert-close {
@@ -111,17 +111,17 @@
   }
 
   .table-container {
-    background: linear-gradient(145deg, #faf0e6, #f5deb3); /* Linen to wheat */
+    background: linear-gradient(145deg, #f3ead7, #e3d1ba);
     padding: 2rem;
     border-radius: 1.5rem;
-    box-shadow: 8px 8px 16px rgba(139, 69, 19, 0.2), -8px -8px 16px rgba(255, 255, 255, 0.8);
+    box-shadow: 8px 8px 16px rgba(107, 84, 61, 0.16), -8px -8px 16px rgba(255, 255, 255, 0.8);
     overflow-x: auto;
   }
 
   .table-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #daa520; /* Goldenrod */
+    color: #7f5f3d;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
@@ -135,8 +135,8 @@
   }
 
   thead {
-    background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%); /* Saddlebrown to sienna */
-    color: #fff8dc; /* Cream */
+    background: linear-gradient(135deg, #8d6b4a 0%, #6d5034 100%);
+    color: #f2e7d5;
   }
 
   thead th {
@@ -148,26 +148,26 @@
     letter-spacing: 0.5px;
   }
 
-  tbody tr:nth-child(even) {
-    background: #fdf5e6; /* Old lace */
+  tbody tr:nth-child(odd) {
+    background: #efe5d7;
   }
 
-  tbody tr:nth-child(odd) {
-    background: #f5f5dc; /* Beige */
+  tbody tr:nth-child(even) {
+    background: #f6ede2;
   }
 
   tbody tr {
-    border-bottom: 1px solid #daa520; /* Goldenrod */
+    border-bottom: 1px solid rgba(155, 108, 79, 0.25);
     transition: background 0.3s;
   }
 
   tbody tr:hover {
-    background: #ffe4b5; /* Moccasin */
+    background: #e8ddc8;
   }
 
   tbody td {
     padding: 1rem;
-    color: #654321; /* Dark brown */
+    color: #5c4b3b;
   }
 
   .badge {
@@ -179,13 +179,13 @@
   }
 
   .badge-active {
-    background: rgba(255, 215, 0, 0.3); /* Light gold */
-    color: #daa520; /* Goldenrod */
+    background: rgba(197, 171, 138, 0.25);
+    color: #7e5f42;
   }
 
   .badge-inactive {
-    background: rgba(169, 169, 169, 0.3); /* Light gray */
-    color: #696969; /* Dim gray */
+    background: rgba(190, 175, 157, 0.3);
+    color: #6f5e4d;
   }
 
   .actions {
@@ -209,25 +209,25 @@
   }
 
   .btn-edit {
-    background: linear-gradient(135deg, #ffd700 0%, #daa520 100%); /* Gold to goldenrod */
-    color: #654321; /* Dark brown */
-    box-shadow: 0 2px 8px rgba(218, 165, 32, 0.3);
+    background: linear-gradient(135deg, #b08a6a 0%, #826148 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(130, 97, 72, 0.3);
   }
 
   .btn-edit:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+    box-shadow: 0 4px 12px rgba(130, 97, 72, 0.4);
   }
 
   .btn-delete {
-    background: linear-gradient(135deg, #cd5c5c 0%, #b22222 100%); /* Indianred to firebrick */
-    color: #fff8dc; /* Cream */
-    box-shadow: 0 2px 8px rgba(178, 34, 34, 0.3);
+    background: linear-gradient(135deg, #c8755d 0%, #9c5d42 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(156, 93, 66, 0.3);
   }
 
   .btn-delete:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(178, 34, 34, 0.4);
+    box-shadow: 0 4px 12px rgba(156, 93, 66, 0.4);
   }
 
   .btn-delete:active {
@@ -241,20 +241,27 @@
 
   .empty-state-icon {
     font-size: 3rem;
-    color: #daa520; /* Goldenrod */
+    color: #a78b6d;
     margin-bottom: 1rem;
   }
 
   .empty-state-text {
-    color: #8b4513; /* Saddlebrown */
+    color: #5c4b3b;
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
   }
 
-  /* Override icon colors for warm theme */
-  .text-purple-500 { color: #daa520 !important; } /* Mail: goldenrod */
-  .text-blue-500 { color: #8b4513 !important; } /* Group: saddlebrown */
-  .text-green-500 { color: #9acd32 !important; } /* Phone: yellowgreen */
+  .text-purple-500 {
+    color: #8b5e3c !important;
+  }
+
+  .text-blue-500 {
+    color: #6d503b !important;
+  }
+
+  .text-green-500 {
+    color: #7e6c4f !important;
+  }
 
   @media (max-width: 768px) {
     .users-header {

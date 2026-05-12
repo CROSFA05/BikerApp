@@ -2,21 +2,43 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import login
 from .models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje
 from .forms import GrupoBikerForm, VehiculoForm, ContactoEmergenciaForm, UsuarioForm, UsuarioChangeForm, ViajeForm
 
 class Home(View):
     def get(self, request):
-        cdx = {'titulo': 'Usuario'}
-        return render(request, 'User/user.html', cdx)
+        if request.user.is_authenticated:
+            cdx = {'titulo': 'Inicio - Biker App'}
+            return render(request, 'home.html', cdx)
+        else:
+            cdx = {'titulo': 'Bienvenido - Biker App'}
+            return render(request, 'landing.html', cdx)
 
-class ListaGrupos(View):
+class Register(View):
+    def get(self, request):
+        form = UsuarioForm()
+        cdx = {'titulo': 'Registro - Biker App', 'form': form}
+        return render(request, 'registration/register.html', cdx)
+    
+    def post(self, request):
+        form = UsuarioForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Cuenta creada exitosamente')
+            return redirect('home')
+        cdx = {'titulo': 'Registro - Biker App', 'form': form}
+        return render(request, 'registration/register.html', cdx)
+
+class ListaGrupos(LoginRequiredMixin, View):
     def get(self, request):
         grupos = GrupoBiker.objects.all()
         cdx = {'grupos': grupos}
         return render(request, 'GrupoBiker/grupoBiker.html', cdx)
 
-class GrupoAlta(View):
+class GrupoAlta(LoginRequiredMixin, View):
     def get(self, request):
         form = GrupoBikerForm()
         cdx = {'titulo': 'Alta de Grupo', 'form': form, 'modo': 'crear'}
@@ -31,7 +53,7 @@ class GrupoAlta(View):
         cdx = {'titulo': 'Alta de Grupo', 'form': form, 'modo': 'crear'}
         return render(request, 'GrupoBiker/grupoCRUD.html', cdx)
 
-class GrupoEditar(View):
+class GrupoEditar(LoginRequiredMixin, View):
     def get(self, request, grupo_id):
         grupo = get_object_or_404(GrupoBiker, pk=grupo_id)
         form = GrupoBikerForm(instance=grupo)
@@ -48,14 +70,14 @@ class GrupoEditar(View):
         cdx = {'titulo': 'Editar Grupo', 'form': form, 'grupo': grupo, 'modo': 'editar'}
         return render(request, 'GrupoBiker/grupoCRUD.html', cdx)
 
-class GrupoEliminar(View):
+class GrupoEliminar(LoginRequiredMixin, View):
     def post(self, request, grupo_id):
         grupo = get_object_or_404(GrupoBiker, pk=grupo_id)
         grupo.delete()
         messages.success(request, 'Grupo eliminado exitosamente')
         return redirect('grupos')
 
-class ListaVehiculos(View):
+class ListaVehiculos(LoginRequiredMixin, View):
     def get(self, request):
         vehiculos = Vehiculo.objects.all()
         cdx = {'vehiculos': vehiculos}
@@ -100,13 +122,13 @@ class VehiculoEliminar(View):
         messages.success(request, 'Vehiculo eliminado exitosamente')
         return redirect('vehiculos')
 
-class ListaContactos(View):
+class ListaContactos(LoginRequiredMixin, View):
     def get(self, request):
         contactos = ContactoEmergencia.objects.select_related('usuario').all()
         cdx = {'contactos': contactos}
         return render(request, 'Contactos/contactoEmergencia.html', cdx)
 
-class ContactoAlta(View):
+class ContactoAlta(LoginRequiredMixin, View):
     def get(self, request):
         form = ContactoEmergenciaForm()
         cdx = {'titulo': 'Alta de Contacto de Emergencia', 'form': form, 'modo': 'crear'}
@@ -121,7 +143,7 @@ class ContactoAlta(View):
         cdx = {'titulo': 'Alta de Contacto de Emergencia', 'form': form, 'modo': 'crear'}
         return render(request, 'Contactos/contactoCRUD.html', cdx)
 
-class ContactoEditar(View):
+class ContactoEditar(LoginRequiredMixin, View):
     def get(self, request, contacto_id):
         contacto = get_object_or_404(ContactoEmergencia, pk=contacto_id)
         form = ContactoEmergenciaForm(instance=contacto)
@@ -138,20 +160,20 @@ class ContactoEditar(View):
         cdx = {'titulo': 'Editar Contacto de Emergencia', 'form': form, 'contacto': contacto, 'modo': 'editar'}
         return render(request, 'Contactos/contactoCRUD.html', cdx)
 
-class ContactoEliminar(View):
+class ContactoEliminar(LoginRequiredMixin, View):
     def post(self, request, contacto_id):
         contacto = get_object_or_404(ContactoEmergencia, pk=contacto_id)
         contacto.delete()
         messages.success(request, 'Contacto eliminado exitosamente')
         return redirect('contactos')
 
-class ListaUsuarios(View):
+class ListaUsuarios(LoginRequiredMixin, View):
     def get(self, request):
         usuarios = Usuario.objects.select_related('grupo_biker').all()
         cdx = {'usuarios': usuarios}
         return render(request, 'Usuario/usuario.html', cdx)
 
-class UsuarioAlta(View):
+class UsuarioAlta(LoginRequiredMixin, View):
     def get(self, request):
         form = UsuarioForm()
         cdx = {'titulo': 'Alta de Usuario', 'form': form, 'modo': 'crear'}
@@ -169,7 +191,7 @@ class UsuarioAlta(View):
         cdx = {'titulo': 'Alta de Usuario', 'form': form, 'modo': 'crear'}
         return render(request, 'Usuario/usuarioCRUD.html', cdx)
 
-class UsuarioEditar(View):
+class UsuarioEditar(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
         usuario = get_object_or_404(Usuario, pk=usuario_id)
         form = UsuarioChangeForm(instance=usuario)
@@ -186,20 +208,20 @@ class UsuarioEditar(View):
         cdx = {'titulo': 'Editar Usuario', 'form': form, 'usuario': usuario, 'modo': 'editar'}
         return render(request, 'Usuario/usuarioCRUD.html', cdx)
 
-class UsuarioEliminar(View):
+class UsuarioEliminar(LoginRequiredMixin, View):
     def post(self, request, usuario_id):
         usuario = get_object_or_404(Usuario, pk=usuario_id)
         usuario.delete()
         messages.success(request, 'Usuario eliminado exitosamente')
         return redirect('usuarios')
 
-class ListaViajes(View):
+class ListaViajes(LoginRequiredMixin, View):
     def get(self, request):
         viajes = Viaje.objects.select_related('usuario').all()
         cdx = {'viajes': viajes}
         return render(request, 'Viaje/viaje.html', cdx)
 
-class ViajeAlta(View):
+class ViajeAlta(LoginRequiredMixin, View):
     def get(self, request):
         form = ViajeForm()
         cdx = {'titulo': 'Alta de Viaje', 'form': form, 'modo': 'crear'}
@@ -214,7 +236,7 @@ class ViajeAlta(View):
         cdx = {'titulo': 'Alta de Viaje', 'form': form, 'modo': 'crear'}
         return render(request, 'Viaje/viajeCRUD.html', cdx)
 
-class ViajeEditar(View):
+class ViajeEditar(LoginRequiredMixin, View):
     def get(self, request, viaje_id):
         viaje = get_object_or_404(Viaje, pk=viaje_id)
         form = ViajeForm(instance=viaje)
@@ -231,7 +253,7 @@ class ViajeEditar(View):
         cdx = {'titulo': 'Editar Viaje', 'form': form, 'viaje': viaje, 'modo': 'editar'}
         return render(request, 'Viaje/viajeCRUD.html', cdx)
 
-class ViajeEliminar(View):
+class ViajeEliminar(LoginRequiredMixin, View):
     def post(self, request, viaje_id):
         viaje = get_object_or_404(Viaje, pk=viaje_id)
         viaje.delete()

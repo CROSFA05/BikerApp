@@ -30,6 +30,9 @@ ALLOWED_HOSTS = []
 #Definir el modelo de usuario personalizado
 AUTH_USER_MODEL = 'miApp.Usuario'
 
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+
 # Application definition
 
 INSTALLED_APPS = [

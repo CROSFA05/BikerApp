@@ -18,14 +18,14 @@
     justify-content: space-between;
     align-items: center;
     gap: 1.5rem;
-    border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+    border-bottom: 1px solid rgba(139, 94, 60, 0.2);
     padding-bottom: 1.5rem;
   }
 
   .header h1 {
     font-size: 2rem;
     font-weight: 600;
-    color: #111827;
+    color: #5c4b3b;
     margin: 0;
   }
 
@@ -34,7 +34,7 @@
   }
 
   .btn-new {
-    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    background: linear-gradient(135deg, #b48b6a 0%, #8b5e3c 100%);
     color: white;
     padding: 0.75rem 1.5rem;
     border-radius: 0.75rem;
@@ -45,30 +45,30 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 4px 15px rgba(139, 94, 60, 0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .btn-new:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+    box-shadow: 0 8px 20px rgba(139, 94, 60, 0.4);
     color: white;
     text-decoration: none;
   }
 
   .table-container {
-    background: #111827; /* Fondo oscuro moderno */
+    background: linear-gradient(145deg, #f3e7db, #e3d1ba);
     padding: 1.5rem;
     border-radius: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 8px 8px 16px rgba(115, 82, 53, 0.18), -8px -8px 16px rgba(255, 255, 249, 0.9);
     overflow-x: auto;
-    border: 1px solid rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(139, 94, 60, 0.1);
   }
 
   .table-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #7c3aed;
+    color: #8b5e3c;
     margin-bottom: 2rem;
     display: flex;
     align-items: center;
@@ -84,7 +84,8 @@
   }
 
   thead {
-    color: #9ca3af;
+    background: linear-gradient(135deg, #8b5e3c 0%, #6d4a2f 100%);
+    color: #f3e7db;
   }
 
   thead th {
@@ -97,20 +98,18 @@
   }
 
   tbody tr {
-    background: #1f2937;
+    border-bottom: 1px solid rgba(139, 94, 60, 0.1);
     transition: all 0.3s ease;
-    border-radius: 1rem;
   }
 
   tbody tr:hover {
-    background: #374151;
+    background: rgba(139, 94, 60, 0.05);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   }
 
   tbody td {
     padding: 1.25rem 1rem;
-    color: #e5e7eb;
+    color: #5c4b3b;
   }
 
   .actions {
@@ -133,21 +132,20 @@
   }
 
   .btn-edit {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #b48b6a 0%, #8b5e3c 100%);
     color: white;
   }
 
   .btn-delete {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    background: linear-gradient(135deg, #c8755d 0%, #9c5d42 100%);
     color: white;
   }
 
   .empty-state {
     text-align: center;
     padding: 5rem 1rem;
-    background: #1f2937;
     border-radius: 1.5rem;
-    border: 2px dashed rgba(124, 58, 237, 0.2);
+    border: 2px dashed rgba(139, 94, 60, 0.2);
   }
 
   @media (max-width: 768px) {

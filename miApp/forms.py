@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Select
+from django.forms import ModelForm, Select, DateInput
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from miApp.models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje
 
@@ -33,13 +33,19 @@ class UsuarioForm(UserCreationForm):
                   'aseguradora', 'telefono', 'grupo_biker', 'activo']
         widgets = {
             'grupo_biker': Select(attrs={'class': 'form-select'}),
-            'fecha_nacimiento': Select(attrs={'type': 'date'}),
+            'fecha_nacimiento': DateInput(attrs={'type': 'date', 'class': 'form-input'}),
+            'sexo': Select(attrs={'class': 'form-select'}),
+            'tipo_de_sangre': Select(attrs={'class': 'form-select'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['grupo_biker'].queryset = GrupoBiker.objects.filter(activo=True)
         self.fields['grupo_biker'].required = False
+        # Add class to all fields
+        for field_name, field in self.fields.items():
+            if field_name not in ['grupo_biker', 'fecha_nacimiento', 'sexo', 'tipo_de_sangre']:
+                field.widget.attrs['class'] = 'form-input'
 
 class UsuarioChangeForm(UserChangeForm):
     class Meta:

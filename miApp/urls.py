@@ -1,6 +1,6 @@
 from django.urls import path
 from miApp.views import (
-    Home, ListaGrupos, GrupoAlta, GrupoEditar, GrupoEliminar, 
+    Home, Register, ListaGrupos, GrupoAlta, GrupoEditar, GrupoEliminar, 
     ListaVehiculos, VehiculoAlta, VehiculoEditar, VehiculoEliminar,
     ListaContactos, ContactoAlta, ContactoEditar, ContactoEliminar,
     ListaUsuarios, UsuarioAlta, UsuarioEditar, UsuarioEliminar,
@@ -8,6 +8,7 @@ from miApp.views import (
 
 urlpatterns = [
     path('', Home.as_view(), name='home'),
+    path('register/', Register.as_view(), name='register'),
     path('grupos/', ListaGrupos.as_view(), name='grupos'),
     path('grupos/alta/', GrupoAlta.as_view(), name='grupoAlta'),
     path('grupos/editar/<int:grupo_id>/', GrupoEditar.as_view(), name='grupoEditar'),
