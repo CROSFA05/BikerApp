@@ -201,10 +201,12 @@
       <span class="iconify" data-icon="lucide:phone" data-width="32" style="vertical-align: -8px; margin-right: 0.5rem;"></span>
       Contactos de Emergencia
     </h1>
+    {% if user.is_staff %}
     <a href="{% url 'contactoAlta' %}" class="btn-new">
       <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
       Nuevo Contacto
     </a>
+    {% endif %}
   </div>
 
   {% if messages %}
@@ -230,7 +232,7 @@
           <th>Nombre</th>
           <th>Teléfono</th>
           <th>Relación</th>
-          <th>Acciones</th>
+          {% if user.is_staff %}<th>Acciones</th>{% endif %}
         </tr>
       </thead>
       <tbody>
@@ -240,6 +242,7 @@
           <td>{{ contacto.nombre }}</td>
           <td>{{ contacto.telefono }}</td>
           <td>{{ contacto.relacion }}</td>
+          {% if user.is_staff %}
           <td>
             <div class="actions">
               <a href="{% url 'contactoEditar' contacto.id %}" class="btn-sm btn-edit">Editar</a>
@@ -249,6 +252,7 @@
               </form>
             </div>
           </td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>
@@ -259,10 +263,12 @@
         <span class="iconify" data-icon="lucide:inbox" data-width="60"></span>
       </div>
       <div class="empty-state-text">No hay contactos de emergencia registrados</div>
+      {% if user.is_staff %}
       <a href="{% url 'contactoAlta' %}" class="btn-new">
         <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
         Crear Primer Contacto
       </a>
+      {% endif %}
     </div>
     {% endif %}
   </div>

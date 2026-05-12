@@ -234,18 +234,10 @@
       top: 0;
       left: 0;
       height: 100vh;
-      top: var(--nav-spacer);
-      left: var(--nav-spacer);
       background: #f5eee4;
-      border-radius: var(--nav-border-radius);
-      padding: var(--nav-spacer) 0;
-      box-shadow: 0 0 40px rgba(107, 84, 61, 0.08);
-      height: calc(100vh - (var(--nav-spacer) * 2));
+      padding: 1.5rem 0;
+      box-shadow: 4px 0 25px rgba(115, 82, 53, 0.1);
       width: 5.5rem;
-      background: #f5eee4;
-      border-radius: 0;
-      padding: 1rem 0;
-      box-shadow: 0 0 40px rgba(107, 84, 61, 0.08);
       z-index: 100;
       display: flex;
       flex-direction: column;
@@ -927,6 +919,19 @@
         ModalController.init();
         ContextMenuController.init();
         feather.replace();
+
+        document.addEventListener('click', function(e) {
+          var btn = e.target.closest('.alert-close');
+          if (btn) {
+            var alert = btn.closest('.alert');
+            if (alert) {
+              alert.style.transition = 'opacity 0.3s';
+              alert.style.opacity = '0';
+              setTimeout(function() { alert.remove(); }, 300);
+            }
+          }
+        });
+
         console.log('✅ BikerApp UI initialized');
       }
 

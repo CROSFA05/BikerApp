@@ -17,3 +17,15 @@ class IsOwnerOrStaff(permissions.BasePermission):
         if hasattr(obj, 'user'):
             return obj.user == request.user
         return obj == request.user
+
+
+class SameGroupOrStaff(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_staff:
+            return True
+        if not request.user.grupo_biker or not obj.grupo_biker:
+            return obj == request.user
+        return request.user.grupo_biker == obj.grupo_biker

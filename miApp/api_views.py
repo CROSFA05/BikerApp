@@ -9,7 +9,7 @@ from .serializers import (
     GrupoBikerSerializer, VehiculoSerializer, ContactoEmergenciaSerializer,
     ViajeSerializer, UsuarioVehiculoSerializer
 )
-from .permissions import IsStaffOrReadOnly, IsOwnerOrStaff
+from .permissions import IsStaffOrReadOnly, IsOwnerOrStaff, SameGroupOrStaff
 
 
 class LoginView(generics.GenericAPIView):
@@ -64,11 +64,30 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
+    permission_classes = [SameGroupOrStaff]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            usuarios = Usuario.objects.all()
+        elif user.grupo_biker:
+            usuarios = Usuario.objects.filter(grupo_biker=user.grupo_biker)
+        else:
+            usuarios = Usuario.objects.filter(id=user.id)
+        return sorted(usuarios, key=lambda u: u.id != user.id)
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['create', 'destroy']:
+            return [permissions.IsAdminUser()]
+        if self.action in ['update', 'partial_update']:
             return [permissions.IsAuthenticated()]
-        return [permissions.IsAdminUser()]
+        return [SameGroupOrStaff()]
+
+    def check_object_permissions(self, request, obj):
+        if self.action in ['update', 'partial_update']:
+            if not (request.user.is_staff or obj == request.user):
+                self.permission_denied(request)
+        super().check_object_permissions(request, obj)
 
 
 class GrupoBikerViewSet(viewsets.ModelViewSet):

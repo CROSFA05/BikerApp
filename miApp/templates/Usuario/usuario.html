@@ -306,10 +306,12 @@
       <span class="iconify" data-icon="lucide:users" data-width="32" style="vertical-align: -8px; margin-right: 0.5rem;"></span>
       Usuarios
     </h1>
+    {% if user.is_staff %}
     <a href="{% url 'usuarioAlta' %}" class="btn-new">
       <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
       Nuevo Usuario
     </a>
+    {% endif %}
   </div>
 
   <!-- Alertas -->
@@ -391,10 +393,13 @@
           </td>
           <td>
             <div class="actions">
+              {% if user.is_staff or user == usuario %}
               <a href="{% url 'usuarioEditar' usuario.id %}" class="btn-sm btn-edit" title="Editar usuario">
                 <span class="iconify" data-icon="lucide:edit" data-width="16"></span>
                 Editar
               </a>
+              {% endif %}
+              {% if user.is_staff %}
               <form method="post" action="{% url 'usuarioEliminar' usuario.id %}" style="display: inline;" onsubmit="return confirm('¿Eliminar este usuario?');">
                 {% csrf_token %}
                 <button type="submit" class="btn-sm btn-delete" title="Eliminar usuario">
@@ -402,6 +407,7 @@
                   Eliminar
                 </button>
               </form>
+              {% endif %}
             </div>
           </td>
         </tr>
@@ -414,10 +420,12 @@
         <span class="iconify" data-icon="lucide:inbox" data-width="60"></span>
       </div>
       <div class="empty-state-text">No hay usuarios registrados</div>
+      {% if user.is_staff %}
       <a href="{% url 'usuarioAlta' %}" class="btn-new">
         <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
         Crear Primer Usuario
       </a>
+      {% endif %}
     </div>
     {% endif %}
   </div>

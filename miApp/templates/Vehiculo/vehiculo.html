@@ -166,10 +166,12 @@
             <span class="iconify" data-icon="lucide:truck" data-width="32" style="vertical-align: -8px; margin-right: 0.5rem;"></span>
             Vehículos
         </h1>
+        {% if user.is_staff %}
         <a href="{% url 'vehiculoAlta' %}" class="btn-new">
             <span class="iconify" data-icon="lucide:plus-circle" data-width="18"></span>
             Nuevo Vehículo
         </a>
+        {% endif %}
     </div>
 
     {% if messages %}
@@ -198,7 +200,7 @@
                     <th>Año</th>
                     <th>Color</th>
                     <th>Matrícula</th>
-                    <th>Acciones</th>
+                    {% if user.is_staff %}<th>Acciones</th>{% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -209,6 +211,7 @@
                     <td>{{ vehiculo.año }}</td>
                     <td>{{ vehiculo.color }}</td>
                     <td><code>{{ vehiculo.matricula }}</code></td>
+                    {% if user.is_staff %}
                     <td>
                         <div class="actions">
                             <a href="{% url 'vehiculoEditar' vehiculo.id %}" class="btn-sm btn-edit">
@@ -224,6 +227,7 @@
                             </form>
                         </div>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

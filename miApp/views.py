@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import login
+from django.http import HttpResponseForbidden
 from .models import GrupoBiker, Vehiculo, ContactoEmergencia, Usuario, Viaje
 from .forms import GrupoBikerForm, VehiculoForm, ContactoEmergenciaForm, UsuarioForm, UsuarioChangeForm, ViajeForm
 
@@ -169,7 +170,13 @@ class ContactoEliminar(LoginRequiredMixin, View):
 
 class ListaUsuarios(LoginRequiredMixin, View):
     def get(self, request):
-        usuarios = Usuario.objects.select_related('grupo_biker').all()
+        if request.user.is_staff:
+            usuarios = Usuario.objects.select_related('grupo_biker').all()
+        elif request.user.grupo_biker:
+            usuarios = Usuario.objects.select_related('grupo_biker').filter(grupo_biker=request.user.grupo_biker)
+        else:
+            usuarios = Usuario.objects.filter(id=request.user.id)
+        usuarios = sorted(usuarios, key=lambda u: u.id != request.user.id)
         cdx = {'usuarios': usuarios}
         return render(request, 'Usuario/usuario.html', cdx)
 
@@ -192,6 +199,12 @@ class UsuarioAlta(LoginRequiredMixin, View):
         return render(request, 'Usuario/usuarioCRUD.html', cdx)
 
 class UsuarioEditar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        usuario = get_object_or_404(Usuario, pk=kwargs.get('usuario_id'))
+        if not (request.user.is_staff or request.user == usuario):
+            return HttpResponseForbidden('No tienes permiso para editar este perfil')
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, usuario_id):
         usuario = get_object_or_404(Usuario, pk=usuario_id)
         form = UsuarioChangeForm(instance=usuario)
@@ -209,6 +222,11 @@ class UsuarioEditar(LoginRequiredMixin, View):
         return render(request, 'Usuario/usuarioCRUD.html', cdx)
 
 class UsuarioEliminar(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden('Solo administradores pueden eliminar usuarios')
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, usuario_id):
         usuario = get_object_or_404(Usuario, pk=usuario_id)
         usuario.delete()
